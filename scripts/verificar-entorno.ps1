@@ -32,6 +32,7 @@ Check "Docker daemon"  { docker info --format "{{.ServerVersion}}" }
 Check "VS Code"        { code --version }
 Check "MySQL local"    { mysql --version } -Opcional   # MySQL corre en Docker; el cliente local es opcional
 Check "Claude Code"    { claude --version }
+Check "GitHub CLI"     { gh auth status }   # PRs del flujo (CLAUDE.md, seccion 2)
 Check "Codex CLI"      { codex --version }
 Check "Codex login"    { codex login status }
 Check "codebase-memory" { codebase-memory-mcp --version } -Opcional   # MCP de grafo de codigo (ver CLAUDE.md, seccion 3)

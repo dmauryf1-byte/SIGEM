@@ -64,6 +64,15 @@ claude mcp list                                   # debe mostrar codebase-memory
 
 Si el `npm install` falla con `ETIMEDOUT`, es Windows Defender analizando el `.exe` en su primera ejecución: repetir el comando. Quitar: `codebase-memory-mcp uninstall -y`.
 
+### GitHub CLI
+
+Se usa para abrir PRs (`main` está protegida: todo entra por PR con squash merge).
+
+```powershell
+winget install --id GitHub.cli -e
+gh auth login --hostname github.com --git-protocol https --web   # en PowerShell normal, NO como administrador
+```
+
 ## 3. Codex
 
 ```powershell
