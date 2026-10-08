@@ -1,0 +1,8 @@
+{
+  "enabledPlugins": {
+    "superpowers@synced": false,
+    "claude-mem-cowork@synced": false,
+    "frontend-design@synced": false,
+    "productivity@synced": false
+  }
+}

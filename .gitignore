@@ -1,0 +1,31 @@
+# Secretos (AGENTS.md §5.7): solo se versiona .env.example
+.env
+.env.*
+!.env.example
+
+# Claude Code: configuración local y paquete de instalación duplicado
+.claude/settings.local.json
+.claude/*.zip
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node / frontend
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
