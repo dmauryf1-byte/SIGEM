@@ -141,5 +141,6 @@ cd frontend && npx playwright test
 ## 8. Estado actual
 
 - **Fase:** 0–2 (definición y herramientas).
-- **Tarea en curso:** SIGEM-001, verificar el entorno local de Windows (Python, Node, Git, MySQL, Docker, VS Code, Codex CLI).
+- **Completada:** SIGEM-001, entorno local de Windows verificado (`scripts/verificar-entorno.ps1` en `LISTO`) y repo en GitHub con `main` protegida (solo PR + squash merge).
+- **Tarea en curso:** SIGEM-002, estructura del repositorio (`backend/`, `frontend/`, `docker-compose.yml` con MySQL 8.4) y prueba real FastAPI → MySQL.
 - **No** escribir módulos de negocio hasta completar SIGEM-002 (repositorio y estructura) y la prueba real FastAPI → MySQL.
