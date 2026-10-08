@@ -34,6 +34,7 @@ Check "MySQL local"    { mysql --version } -Opcional   # MySQL corre en Docker; 
 Check "Claude Code"    { claude --version }
 Check "Codex CLI"      { codex --version }
 Check "Codex login"    { codex login status }
+Check "codebase-memory" { codebase-memory-mcp --version } -Opcional   # MCP de grafo de codigo (ver CLAUDE.md, seccion 3)
 
 Write-Host "`n== Plugins de Claude Code ==" -ForegroundColor Cyan
 try {

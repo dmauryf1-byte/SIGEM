@@ -52,6 +52,18 @@ claude plugin install codex@openai-codex --scope project
 
 `--scope project` escribe en `.claude/settings.json`: la configuración queda versionada con el repo.
 
+### MCP global: codebase-memory-mcp
+
+Indexa el código en un grafo consultable (no es un plugin). Convive con claude-mem: uno recuerda el código y el otro las sesiones (ver `CLAUDE.md` §3).
+
+```powershell
+npm install -g codebase-memory-mcp@0.11.0
+codebase-memory-mcp install -y --clients=claude   # solo Claude Code; sin --clients toca todos los clientes detectados
+claude mcp list                                   # debe mostrar codebase-memory-mcp ... Connected
+```
+
+Si el `npm install` falla con `ETIMEDOUT`, es Windows Defender analizando el `.exe` en su primera ejecución: repetir el comando. Quitar: `codebase-memory-mcp uninstall -y`.
+
 ## 3. Codex
 
 ```powershell

@@ -74,6 +74,17 @@
 - **AGENTS.md prevalece** en tests, validaciones y seguridad: los tests de cada funcionalidad, la cobertura mínima y las reglas críticas de §3 no se recortan aunque ponytail sugiera "un solo check".
 - `ponytail:ponytail-review` en cada PR; `ponytail:ponytail-audit` al cerrar cada fase.
 
+### Memoria: claude-mem y codebase-memory-mcp (conviven, no se solapan)
+| Herramienta | Qué recuerda | Cuándo usarla |
+|---|---|---|
+| `claude-mem` (plugin) | Las **sesiones**: lo hecho, decisiones, intentos fallidos, pendientes | Retomar trabajo (`claude-mem:mem-search`) y cerrar sesiones largas (`claude-mem:handoff`) |
+| `codebase-memory-mcp` (MCP global, v0.11.0) | El **código**: grafo de funciones, llamadas, rutas e imports | Preguntas estructurales: quién llama a X, impacto de un cambio (`detect_changes`), código muerto |
+
+- El grafo no guarda decisiones ni conversaciones; las decisiones viven en `docs/adr/` y en claude-mem.
+- Indexar con `index_repository` desde SIGEM-002, cuando exista código, y reindexar tras cambios grandes. Sin índice, se usa Grep/Read.
+- Su resultado guía la búsqueda, no reemplaza la lectura: antes de editar un archivo se lee completo (AGENTS.md §5.1).
+- En revisiones de PR, `detect_changes()` ayuda a ver qué símbolos toca el diff.
+
 ### Desactivados (plugin completo: Claude Code no permite apagar skills sueltas de un plugin)
 - `superpowers`: duplica TDD, planes y debugging de agent-skills. Sus dos skills útiles están copiadas en `.claude/skills/`.
 - `claude-mem-cowork` (se usa `claude-mem`), `frontend-design` (se solapa con ui-ux-pro-max), `productivity` (las tareas viven en Linear).
