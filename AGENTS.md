@@ -147,5 +147,5 @@ cd frontend && npx playwright test
 - **Fase:** 0–2 (definición y herramientas).
 - **Completada:** SIGEM-001, entorno local de Windows verificado (`scripts/verificar-entorno.ps1` en `LISTO`) y repo en GitHub con `main` protegida (solo PR + squash merge).
 - **Cambio de stack (2026-10-25):** frontend en HTML + CSS + JavaScript y diseño del prototipo de Figma ([ADR-0001](docs/adr/0001-frontend-html-css-js-y-diseno-figma.md)). Plan completo en `docs/PLAN.md`.
-- **Tarea en curso:** SIGEM-002, estructura del backend (`backend/`, `docker-compose.yml` con MySQL 8.4) y prueba real FastAPI → MySQL. Después, SIGEM-003: esqueleto del frontend con el layout de Figma.
-- **No** escribir módulos de negocio hasta completar SIGEM-002 (repositorio y estructura) y la prueba real FastAPI → MySQL.
+- **SIGEM-002 implementada** (en revisión, PR pendiente): backend FastAPI + MySQL 8.4 en Docker, `GET /api/v1/health` 200/503 con tests contra MySQL real, Alembic configurado ([ADR-0002](docs/adr/0002-sqlalchemy-sincrono.md)).
+- **Siguiente:** SIGEM-003, esqueleto del frontend con el layout de Figma. Los módulos de negocio empiezan en SIGEM-004, después de que SIGEM-002 esté mergeada.
