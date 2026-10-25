@@ -66,7 +66,7 @@ Estado → badge: Pagada = green · Pendiente = yellow · Parcial = blue · Anul
 ```
 
 - **Sidebar:** logo = cuadro 36×36 `--primary`, radio 10, letra **"S"** blanca DM Sans 800 16 px; al lado "SIGEM" (DM Sans 700 16 px `#F1F5F9`) y debajo "Sistema de gestión empresarial" (11 px `--text-muted`).
-- **Menú** (en este orden, icono 18 px + texto): Inicio · Clientes · Productos · Vendedores · Facturas · Pagos · Reportes · Usuarios (este último solo para Administrador; el backend también lo bloquea). Ítem: padding 10×16, radio 8, 14 px 500, `--text-subtle`; hover `--sidebar-hover` con texto `#F1F5F9`; activo `--primary` con texto blanco.
+- **Menú** (en este orden, icono 18 px + texto): Inicio · Clientes · Productos · Vendedores · Proveedores · Facturas · Pagos · Reportes · Usuarios (este último solo para Administrador; el backend también lo bloquea). Ítem: padding 10×16, radio 8, 14 px 500, `--text-subtle`; hover `--sidebar-hover` con texto `#F1F5F9`; activo `--primary` con texto blanco.
 - **Pie del sidebar:** avatar redondo 34 px `--primary` con la inicial; nombre (13 px 600) y rol (11 px); "Cerrar sesión" en `--danger`.
 - **Barra superior:** a la derecha, acciones de la pantalla (ej. "+ Nueva factura"), campana en `btn-icon` con punto rojo, avatar 34 px fondo `#DBEAFE` letra `--primary-dark`.
 - **Login:** fondo `linear-gradient(135deg, #1E293B, #0F172A)` con dos halos radiales (azul y verde); logo 56×56 radio 16 con sombra azul; "SIGEM" DM Sans 800 26 px; tarjeta blanca radio 16, padding 32, ancho máx. 420.
@@ -91,4 +91,5 @@ Los valores exactos de cada clase están en `src/index.css` del prototipo y se c
 | "¿Olvidaste tu contraseña?" por correo | Se oculta en v1; el administrador restablece | Sin servicio de correo ($0) |
 | Sin aviso legal | "Documento interno — no es factura electrónica DIAN" en facturas y PDF | AGENTS.md §3.10 |
 | Estado de factura "Vencida" | Pendiente / Parcial / Pagada / Anulada | Reglas de pago de AGENTS.md §3 |
+| Sin módulo de proveedores | Ítem "Proveedores" (icono `truck` de Feather) con la pantalla de lista estándar | Requisito de SIGEM (PLAN.md, SIGEM-008) |
 | Ancho fijo de escritorio | Mismo diseño; mínimo soportado 1280 px | App interna de escritorio |
