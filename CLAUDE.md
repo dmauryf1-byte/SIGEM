@@ -54,9 +54,9 @@
 |---|---|
 | 0–1 Definición / arquitectura | `agent-skills:interview-me`, `agent-skills:documentation-and-adrs`, `agent-skills:api-and-interface-design` |
 | 1 Calidad | `agent-skills:constraint-driven-development` (crear `CONSTRAINTS.md`) |
-| 6 Seguridad | `agent-skills:security-and-hardening` (JWT, RBAC, OWASP, Ley 1581 de Habeas Data) |
-| 12 Diseño | `ui-ux-pro-max` → sistema de diseño (paleta, tipografía, reglas UX) guardado en `docs/design/DESIGN.md`; Figma para el prototipo 1440×900 |
-| 12 Frontend | `agent-skills:frontend-ui-engineering` (componentes accesibles con shadcn/ui, siguiendo `docs/design/DESIGN.md`) |
+| 6 Seguridad | `agent-skills:security-and-hardening` (JWT, RBAC, OWASP, Ley 1581 de Habeas Data) + `/claude-security` (ver abajo) |
+| 12 Diseño | Prototipo de Figma Make (MCP de Figma) → `docs/design/DESIGN.md`. `ui-ux-pro-max` solo para huecos del prototipo y accesibilidad |
+| 12 Frontend | `agent-skills:frontend-ui-engineering` (HTML semántico + `css/sigem.css` + JS, siguiendo `docs/design/DESIGN.md`) |
 | 14 QA | `redesign-existing-projects` (auditoría visual de la UI ya construida), `agent-skills:browser-testing-with-devtools`, `agent-skills:webperf`, `agent-skills:code-review-and-quality` |
 | Rendimiento | `agent-skills:performance-optimization` (consultas N+1, índices, bundle), solo con una medición que lo justifique |
 | 16 CI/CD | `agent-skills:ci-cd-and-automation` |
@@ -65,14 +65,26 @@
 | Continuidad | `claude-mem:handoff` al cerrar sesiones largas |
 
 ### Reglas de uso del diseño
-- `ui-ux-pro-max` propone; el humano decide. Su salida es un insumo: descartar patrones de landing page (hero, logos de clientes, CTA de ventas), porque SIGEM es una aplicación interna de tablas y formularios.
+- **Referencia visual:** el prototipo de Figma Make *FactuPyme Billing System Prototype* (`fileKey yo56ij2do1azdmmGcViY2i`). SIGEM debe verse igual. Se lee con el MCP de Figma: `get_design_context` con `nodeId 0:1` devuelve sus fuentes; la pantalla real está en `src/App.tsx` + `src/index.css` (`Layout.tsx`, `UI.tsx` y `pages/` no se usan).
+- **Nombre:** donde el prototipo dice *FactuPyme* va **SIGEM**, y la "F" del logo pasa a "S".
+- **Lo que no se copia del prototipo:** el usuario demo `admin/1234`, los datos de ejemplo y la recuperación de contraseña por correo (no hay servicio de correo con $0). Lo que **se agrega** aunque el prototipo no lo tenga: el aviso "Documento interno, no es factura electrónica DIAN" (AGENTS.md §3.10).
 - Una sola fuente visual: `docs/design/DESIGN.md`. Ninguna pantalla inventa colores ni tipografías fuera de ese archivo.
+- `ui-ux-pro-max` solo propone para lo que el prototipo no cubre; el humano decide. Descartar patrones de landing page.
 - `awesome-claude-design` no es una skill: es un catálogo de `DESIGN.md` de referencia. Se consulta en la fase 12 para elegir inspiración, no se instala.
 
 ### Ponytail y las reglas del proyecto
 - Ponytail aplica a **lo que se construye** (sin abstracciones ni dependencias innecesarias).
 - **AGENTS.md prevalece** en tests, validaciones y seguridad: los tests de cada funcionalidad, la cobertura mínima y las reglas críticas de §3 no se recortan aunque ponytail sugiera "un solo check".
 - `ponytail:ponytail-review` en cada PR; `ponytail:ponytail-audit` al cerrar cada fase.
+
+### Seguridad: security-guidance y claude-security (instalados en el proyecto)
+| Plugin | Qué hace | Cuándo |
+|---|---|---|
+| `security-guidance` | Avisos por patrón al editar (`innerHTML`, secretos, SQL armado a mano…) y revisión del diff con LLM al terminar cada turno y en cada `git commit` | Siempre activo. Sus hallazgos se tratan como los de Codex: se verifican con `receiving-code-review` |
+| `claude-security` | Escaneo profundo con hallazgos verificados y parches propuestos (`/claude-security`) | Al cerrar cada fase y en los PR de módulos críticos (auth, invoices, payments, inventory), con `scan changes` a esfuerzo `high` |
+
+- Ambos usan la sesión de Claude Code: no cuestan dinero, pero gastan límites. Si `security-guidance` agota el límite, apagar solo la revisión por turno con `ENABLE_STOP_REVIEW=0` y conservar la de commits.
+- Los reportes `CLAUDE-SECURITY-*/` están en `.gitignore`: el repo es público y describen vulnerabilidades. Los hallazgos atendidos se resumen en el PR, sin el exploit.
 
 ### Memoria: claude-mem y codebase-memory-mcp (conviven, no se solapan)
 | Herramienta | Qué recuerda | Cuándo usarla |

@@ -11,17 +11,17 @@
 
 | Capa | Tecnología |
 |---|---|
-| Frontend | React 19 + TypeScript (strict) + Vite + Tailwind CSS |
-| UI base | shadcn/ui (Radix) + lucide-react |
-| Estado servidor / tablas / formularios | TanStack Query, TanStack Table, React Hook Form + Zod |
-| Routing | React Router |
-| Backend | Python 3.12+, FastAPI, Pydantic v2 |
+| Frontend | HTML5 + CSS + JavaScript (ES modules nativos), sin framework ni paso de build ([ADR-0001](docs/adr/0001-frontend-html-css-js-y-diseno-figma.md)) |
+| Diseño | Prototipo de Figma Make → tokens y componentes en `docs/design/DESIGN.md` (única fuente visual) |
+| Iconos | SVG de línea inline (los del prototipo de Figma) |
+| Backend | Python 3.12+, FastAPI, Pydantic v2 (también sirve `frontend/` como estáticos) |
 | ORM / migraciones | SQLAlchemy 2.x (estilo 2.0, tipado) + Alembic |
 | Base de datos | MySQL Community 8.4 (InnoDB, utf8mb4) |
 | Auth | JWT (access corto + refresh) + RBAC; contraseñas con Argon2 o bcrypt |
 | Tooling Python | uv (dependencias), ruff (lint + format), mypy (tipos) |
-| Tooling TS | ESLint, Prettier, `tsc --noEmit` |
-| Tests | Pytest + httpx (back), Vitest + Testing Library (front), Playwright (E2E) |
+| Tooling JS | ESLint + Prettier (npm solo para herramientas de desarrollo) |
+| Tests | Pytest + httpx (back), Vitest (lógica JS), Playwright (E2E) |
+| Seguridad | Plugins `security-guidance` (continuo) y `claude-security` (auditorías); ver CLAUDE.md §3 |
 | Reportes | openpyxl (Excel), WeasyPrint o ReportLab (PDF) |
 | Infra local | Docker + Docker Compose |
 | CI | GitHub Actions (nivel gratuito) |
@@ -52,10 +52,13 @@ backend/
   tests/
     unit/  integration/
 frontend/
-  src/
-    app/             # router, providers, layout
-    features/<modulo>/   # páginas, componentes, hooks y api del módulo
-    shared/          # ui (shadcn), api client, auth, utils
+  index.html               # login
+  <modulo>.html            # una página por pantalla: dashboard.html, clientes.html, facturas.html…
+  css/sigem.css            # tokens y componentes de docs/design/DESIGN.md
+  js/
+    shared/                # api.js (fetch + errores), auth.js, layout.js (sidebar/topbar), ui.js (modal, toast, tabla)
+    <modulo>.js            # lógica de cada pantalla
+  tests/                   # Vitest (unit) y Playwright (e2e)
 ```
 
 **Reglas de dependencia:**
@@ -91,7 +94,7 @@ frontend/
 - Toda FK recibida (`customer_id`, `product_id`…) se valida contra la BD y responde un error claro si no existe.
 - Listados paginados (`?page=&size=`) desde el primer endpoint.
 - Los permisos se validan **siempre en el backend**. El frontend solo oculta opciones.
-- El OpenAPI generado por FastAPI es el contrato oficial; el cliente TS se genera desde él (openapi-typescript).
+- El OpenAPI generado por FastAPI es el contrato oficial; `frontend/js/shared/api.js` lo consume.
 
 ---
 
@@ -102,11 +105,12 @@ frontend/
 3. Todo cambio de esquema pasa por una migración Alembic revisada a mano (el autogenerate se revisa, nunca se confía a ciegas).
 4. Toda funcionalidad lleva tests. Cada bug se corrige primero con un test que lo reproduce.
 5. Cambios pequeños: un PR = una tarea `SIGEM-NNN`.
-6. Python con type hints completos; TypeScript `strict: true`. Prohibido `# type: ignore`, `@ts-ignore`, `any`, `eslint-disable` o tests en `skip` sin justificación escrita en el PR.
-7. Nunca secretos en Git. `.env` va en `.gitignore`; `.env.example` se mantiene actualizado.
-8. No eliminar funcionalidad existente sin autorización.
-9. No declarar una tarea terminada sin mostrar la salida real de los comandos de verificación (sección 7).
-10. Si falta contexto o hay ambigüedad: **detenerse y preguntar**, no inventar requerimientos.
+6. Python con type hints completos. Prohibido `# type: ignore`, `eslint-disable` o tests en `skip` sin justificación escrita en el PR.
+7. **XSS:** en el frontend, los datos que vienen del servidor o del usuario se pintan con `textContent` o `createElement`, **nunca** con `innerHTML`, `outerHTML`, `insertAdjacentHTML` ni `document.write`. El token de sesión va en cookie `HttpOnly`, nunca en `localStorage`.
+8. Nunca secretos en Git. `.env` va en `.gitignore`; `.env.example` se mantiene actualizado.
+9. No eliminar funcionalidad existente sin autorización.
+10. No declarar una tarea terminada sin mostrar la salida real de los comandos de verificación (sección 7).
+11. Si falta contexto o hay ambigüedad: **detenerse y preguntar**, no inventar requerimientos.
 
 ---
 
@@ -125,8 +129,8 @@ frontend/
 # Backend
 cd backend && uv run ruff check . && uv run ruff format --check . && uv run mypy app && uv run pytest --cov=app
 
-# Frontend
-cd frontend && npm run lint && npm run typecheck && npm run test -- --run && npm run build
+# Frontend (sin build: el navegador carga los archivos tal cual)
+cd frontend && npm run lint && npm run format:check && npm run test -- --run
 
 # E2E (con docker compose up)
 cd frontend && npx playwright test
@@ -142,5 +146,6 @@ cd frontend && npx playwright test
 
 - **Fase:** 0–2 (definición y herramientas).
 - **Completada:** SIGEM-001, entorno local de Windows verificado (`scripts/verificar-entorno.ps1` en `LISTO`) y repo en GitHub con `main` protegida (solo PR + squash merge).
-- **Tarea en curso:** SIGEM-002, estructura del repositorio (`backend/`, `frontend/`, `docker-compose.yml` con MySQL 8.4) y prueba real FastAPI → MySQL.
+- **Cambio de stack (2026-10-25):** frontend en HTML + CSS + JavaScript y diseño del prototipo de Figma ([ADR-0001](docs/adr/0001-frontend-html-css-js-y-diseno-figma.md)). Plan completo en `docs/PLAN.md`.
+- **Tarea en curso:** SIGEM-002, estructura del backend (`backend/`, `docker-compose.yml` con MySQL 8.4) y prueba real FastAPI → MySQL. Después, SIGEM-003: esqueleto del frontend con el layout de Figma.
 - **No** escribir módulos de negocio hasta completar SIGEM-002 (repositorio y estructura) y la prueba real FastAPI → MySQL.

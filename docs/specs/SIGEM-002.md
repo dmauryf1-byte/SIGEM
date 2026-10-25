@@ -11,7 +11,7 @@ Dejar el esqueleto del backend listo para que el primer módulo de negocio (`cus
 El éxito se demuestra con **una petición real**: `GET /api/v1/health` responde `200` porque FastAPI consultó a MySQL 8.4 corriendo en Docker, y responde `503` cuando MySQL no está disponible. Ambos casos tienen test.
 
 ### Fuera de alcance
-- Frontend: va en **SIGEM-003** (Vite + React + TS strict).
+- Frontend: va en **SIGEM-003** (HTML + CSS + JavaScript con el diseño de Figma, ADR-0001).
 - Módulos de negocio, tablas y migraciones con contenido.
 - Autenticación (JWT/RBAC): fase 6.
 - Dockerfile del backend y CI: fases 16–17.
@@ -24,7 +24,7 @@ El éxito se demuestra con **una petición real**: `GET /api/v1/health` responde
 | Ejecución en desarrollo | Backend local con `uv`; Docker Compose solo levanta MySQL | Todo en Docker: recarga y depuración lentas en Windows |
 | ORM | SQLAlchemy 2.x **síncrono** + **PyMySQL** | Async + asyncmy: más complejidad en sesiones y tests sin necesidad medida. `with_for_update()` funciona igual en síncrono |
 
-La decisión síncrono vs. asíncrono es costosa de revertir, así que se registra como `docs/adr/0001-sqlalchemy-sincrono.md`.
+La decisión síncrono vs. asíncrono es costosa de revertir, así que se registra como `docs/adr/0002-sqlalchemy-sincrono.md`.
 
 ## Stack de esta tarea
 
@@ -140,7 +140,7 @@ def health(session: Session = Depends(get_session)) -> JSONResponse:
 4. `uv run alembic current` se conecta a MySQL sin error (no hay migraciones todavía).
 5. `uv run ruff check .`, `uv run ruff format --check .`, `uv run mypy app` y `uv run pytest --cov=app` en verde; la salida se pega en el PR.
 6. `.env` no está en Git; `.env.example` contiene todas las variables usadas.
-7. `docs/adr/0001-sqlalchemy-sincrono.md` registra la decisión del ORM.
+7. `docs/adr/0002-sqlalchemy-sincrono.md` registra la decisión del ORM.
 8. `codebase-memory-mcp` indexa el repo (`index_repository`), como indica CLAUDE.md §3.
 9. `AGENTS.md` §8 se actualiza: SIGEM-002 completada; siguiente, SIGEM-003.
 
