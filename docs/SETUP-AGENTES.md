@@ -28,6 +28,8 @@ claude plugin list          # mira los IDs exactos (name@marketplace o name@sync
 | agent-skills | **activo** | Base de ingeniería: specs, planes, TDD, debugging, seguridad, CI/CD |
 | codex (openai) | **activo** | Revisión cruzada y rescate |
 | ponytail | **activo** | Revisión de sobre-ingeniería bajo demanda |
+| security-guidance | **activo** | Avisos de seguridad al editar y revisión del diff al terminar cada turno y en cada commit |
+| claude-security | **activo** | Escaneo profundo de vulnerabilidades bajo demanda (`/claude-security`) |
 | claude-mem | activo (opcional) | Memoria entre sesiones |
 | superpowers | **desactivado** | Duplica TDD, planes y debugging de agent-skills; sus 2 skills útiles están vendorizadas |
 | claude-mem-cowork | **desactivado** | Duplica claude-mem |
@@ -46,6 +48,8 @@ claude plugin disable productivity --scope project
 Si alguno no está instalado:
 
 ```powershell
+claude plugin install security-guidance@claude-plugins-official --scope project
+claude plugin install claude-security@claude-plugins-official --scope project
 claude plugin marketplace add openai/codex-plugin-cc
 claude plugin install codex@openai-codex --scope project
 ```

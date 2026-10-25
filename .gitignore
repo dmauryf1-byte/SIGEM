@@ -1,4 +1,4 @@
-# Secretos (AGENTS.md §5.7): solo se versiona .env.example
+# Secretos (AGENTS.md §5.8): solo se versiona .env.example
 .env
 .env.*
 !.env.example
@@ -29,3 +29,6 @@ test-results/
 Thumbs.db
 .vscode/*
 !.vscode/extensions.json
+
+# Reportes de claude-security: describen vulnerabilidades; no se publican en el repo público
+CLAUDE-SECURITY-*/

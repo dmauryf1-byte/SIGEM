@@ -1,0 +1,47 @@
+[project]
+name = "sigem-backend"
+version = "0.1.0"
+description = "API de SIGEM"
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.20.1",
+    "cryptography>=50.0.2",
+    "fastapi[standard]>=0.162.0",
+    "pydantic-settings>=2.16.1",
+    "pymysql>=1.2.3",
+    "sqlalchemy>=2",
+]
+
+[tool.uv]
+package = false
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "mypy>=2.4.0",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.17.2",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "ASYNC"]
+
+[tool.ruff.lint.isort]
+known-third-party = ["alembic"] # la carpeta alembic/ del repo no es el paquete
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"] # assert es la forma normal de verificar en pytest
+
+[tool.mypy]
+strict = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "--strict-markers"
