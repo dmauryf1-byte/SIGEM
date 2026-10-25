@@ -1,6 +1,6 @@
 # SIGEM-002 — Estructura del backend y prueba real FastAPI → MySQL
 
-- **Estado:** borrador, pendiente de aprobación del humano
+- **Estado:** aprobada por el humano el 2026-10-25
 - **Rama:** `feat/SIGEM-002-estructura-backend`
 - **Bloquea a:** todos los módulos de negocio (AGENTS.md §8)
 
@@ -147,3 +147,13 @@ def health(session: Session = Depends(get_session)) -> JSONResponse:
 ## Preguntas abiertas
 
 - Ninguna. El puerto `3306` está libre porque no hay MySQL local instalado. Si algún día choca, se cambia solo el mapeo de `docker-compose.yml`.
+
+## Plan de subtareas (un commit cada una)
+
+| # | Subtarea | Verificación |
+|---|---|---|
+| 1 | MySQL en Docker: `.env.example`, `docker-compose.yml`, `docker/mysql/init/01-test-db.sql` | Contenedor `healthy`; existen `sigem` y `sigem_test` en `utf8mb4` (criterio 1) |
+| 2 | Proyecto backend: `pyproject.toml`, `config.py`, `db.py`, `main.py` | `uv sync`; ruff y mypy en verde |
+| 3 | Health con TDD: primero los tests de `200` y `503` (fallan), luego `health.py` | `pytest` en verde (criterios 2 y 3) |
+| 4 | Alembic: `alembic.ini` + `env.py` con la URL de `config.py` | `uv run alembic current` sin error (criterio 4) |
+| 5 | Cierre: ADR-0002, AGENTS.md §8, `index_repository` | Comandos de AGENTS.md §7 en verde (criterios 5–9) |
