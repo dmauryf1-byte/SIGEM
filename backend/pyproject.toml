@@ -37,7 +37,7 @@ select = ["E", "F", "W", "I", "B", "UP", "S", "ASYNC"]
 known-third-party = ["alembic"] # la carpeta alembic/ del repo no es el paquete
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["S101"] # assert es la forma normal de verificar en pytest
+"tests/**" = ["S101", "S105", "S106"] # assert y contraseñas de prueba son normales en tests
 
 [tool.mypy]
 strict = true
