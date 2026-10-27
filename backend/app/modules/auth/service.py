@@ -61,24 +61,30 @@ def _issue(
             expires_at=expires_at,
         ),
     )
-    access = security.create_access_token(user_id=user.id, role=user.role.value, now=now)
+    access = security.create_access_token(
+        user_id=user.id, role=user.role.value, session_id=session_id, now=now
+    )
     return Session(
         user=user, access_token=access, refresh_token=token, refresh_expires_at=expires_at
     )
 
 
 def login(db: DbSession, *, username: str, password: str, now: datetime) -> Session:
-    user = users_service.get_by_username(db, username)
+    user = users_service.get_by_username_for_update(db, username)
     if user is None:
+        db.rollback()
         security.verify_password(security.DUMMY_HASH, password)  # mismo tiempo que un usuario real
         raise _invalid_credentials()
     if users_service.is_locked(user, now):
+        db.rollback()
+        security.verify_password(security.DUMMY_HASH, password)  # no delatar el bloqueo por tiempo
         raise _account_locked()
     if not security.verify_password(user.password_hash, password):
         users_service.register_failed_login(user, now)
         db.commit()
         raise _account_locked() if users_service.is_locked(user, now) else _invalid_credentials()
     if not user.is_active:
+        db.rollback()
         raise _invalid_credentials()
 
     users_service.register_successful_login(user)
@@ -110,6 +116,11 @@ def refresh(db: DbSession, token: str, now: datetime) -> Session:
     result = _issue(db, user, stored.session_id, stored.session_started_at, now)
     db.commit()
     return result
+
+
+def is_session_active(db: DbSession, session_id: str) -> bool:
+    """Una sesión cerrada (logout, reset-password, token reutilizado) invalida su JWT de acceso."""
+    return repository.session_is_active(db, session_id)
 
 
 def logout(db: DbSession, token: str, now: datetime) -> None:

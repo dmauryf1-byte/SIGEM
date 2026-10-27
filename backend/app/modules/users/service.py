@@ -43,6 +43,10 @@ def get_by_username(session: Session, username: str) -> User | None:
     return repository.get_by_username(session, username.strip())
 
 
+def get_by_username_for_update(session: Session, username: str) -> User | None:
+    return repository.get_by_username_for_update(session, username.strip())
+
+
 def create_user(
     session: Session, *, username: str, full_name: str, password: str, role: Role
 ) -> User:

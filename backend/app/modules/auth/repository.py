@@ -13,6 +13,17 @@ def get_by_hash_for_update(session: Session, token_hash: str) -> RefreshToken | 
     )
 
 
+def session_is_active(session: Session, session_id: str) -> bool:
+    return (
+        session.scalar(
+            select(RefreshToken.id)
+            .where(RefreshToken.session_id == session_id, RefreshToken.revoked_at.is_(None))
+            .limit(1)
+        )
+        is not None
+    )
+
+
 def add(session: Session, token: RefreshToken) -> None:
     session.add(token)
     session.flush()

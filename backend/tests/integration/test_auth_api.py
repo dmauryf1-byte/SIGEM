@@ -142,3 +142,31 @@ def test_require_role(client: TestClient, make_user: Callable[[str, Role], None]
 
     do_login(client, "jefe")
     assert client.get("/api/v1/_test/admin-only").status_code == 200
+
+
+def test_logout_invalida_tambien_el_token_de_acceso(
+    client: TestClient, make_user: Callable[[str, Role], None]
+) -> None:
+    """Hallazgo de security-guidance: el JWT de acceso no debe sobrevivir al logout."""
+    make_user("ana", Role.SELLER)
+    do_login(client)
+    stolen_access = client.cookies.get("sigem_access") or ""
+
+    client.post("/api/v1/auth/logout")
+    client.cookies.set("sigem_access", stolen_access, path="/api")
+
+    assert client.get("/api/v1/auth/me").status_code == 401
+
+
+def test_reset_password_invalida_tokens_de_acceso_abiertos(
+    client: TestClient, make_user: Callable[[str, Role], None], db: Session
+) -> None:
+    from app.core.clock import utcnow
+    from app.modules.auth import service as auth_service
+
+    make_user("ana", Role.SELLER)
+    do_login(client)
+
+    auth_service.reset_password(db, "ana", "clave-nueva-456", utcnow())
+
+    assert client.get("/api/v1/auth/me").status_code == 401

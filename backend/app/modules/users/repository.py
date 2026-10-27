@@ -12,6 +12,11 @@ def get_by_username(session: Session, username: str) -> User | None:
     return session.scalar(select(User).where(User.username == username))
 
 
+def get_by_username_for_update(session: Session, username: str) -> User | None:
+    # FOR UPDATE: intentos de login simultáneos no pueden pisarse el contador de fallos
+    return session.scalar(select(User).where(User.username == username).with_for_update())
+
+
 def add(session: Session, user: User) -> None:
     session.add(user)
     session.flush()

@@ -146,3 +146,26 @@ def test_reset_password_cambia_clave_desbloquea_y_cierra_sesiones(db: Session) -
     with pytest.raises(AppError):
         login(db, now, password=PASSWORD)
     assert login(db, now, password="clave-nueva-456").user.username == "ana"
+
+
+def test_intentos_simultaneos_no_esquivan_el_bloqueo(ana: int) -> None:
+    """Hallazgo de security-guidance: sin FOR UPDATE los fallos en paralelo se pisan."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    from tests.conftest import TestSession
+
+    now = utcnow()
+
+    def wrong_login(_: int) -> int:
+        with TestSession() as db:
+            try:
+                service.login(db, username="ana", password="clave-equivocada", now=now)
+            except AppError as exc:
+                return exc.status_code
+        return 200
+
+    with ThreadPoolExecutor(max_workers=10) as pool:
+        codes = list(pool.map(wrong_login, range(10)))
+
+    assert codes.count(401) == 4  # exactamente 4 fallos "normales"; del 5.º en adelante, bloqueo
+    assert codes.count(423) == 6

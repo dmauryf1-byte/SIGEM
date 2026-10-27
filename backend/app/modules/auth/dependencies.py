@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from app.core import security
 from app.core.db import get_session
 from app.core.errors import AppError
+from app.modules.auth import service as auth_service
 from app.modules.users import service as users_service
 from app.modules.users.models import Role, User
 
@@ -27,6 +28,8 @@ def get_current_user(
     # El rol y el estado salen de la BD, no del token: un usuario desactivado pierde acceso ya
     user = users_service.get_by_id(session, claims.user_id)
     if user is None or not user.is_active:
+        raise not_authenticated
+    if not auth_service.is_session_active(session, claims.session_id):
         raise not_authenticated
     return user
 

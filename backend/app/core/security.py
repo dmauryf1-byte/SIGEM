@@ -25,6 +25,7 @@ class InvalidTokenError(Exception):
 class AccessClaims:
     user_id: int
     role: str
+    session_id: str
 
 
 def hash_password(password: str) -> str:
@@ -38,9 +39,15 @@ def verify_password(password_hash: str, password: str) -> bool:
         return False
 
 
-def create_access_token(*, user_id: int, role: str, now: datetime) -> str:
+def create_access_token(*, user_id: int, role: str, session_id: str, now: datetime) -> str:
     issued = now.replace(tzinfo=UTC)
-    payload = {"sub": str(user_id), "role": role, "iat": issued, "exp": issued + ACCESS_TOKEN_TTL}
+    payload = {
+        "sub": str(user_id),
+        "role": role,
+        "sid": session_id,
+        "iat": issued,
+        "exp": issued + ACCESS_TOKEN_TTL,
+    }
     return jwt.encode(payload, settings.jwt_secret.get_secret_value(), algorithm=JWT_ALGORITHM)
 
 
@@ -50,9 +57,11 @@ def decode_access_token(token: str) -> AccessClaims:
             token,
             settings.jwt_secret.get_secret_value(),
             algorithms=[JWT_ALGORITHM],
-            options={"require": ["sub", "role", "exp"]},
+            options={"require": ["sub", "role", "sid", "exp"]},
         )
-        return AccessClaims(user_id=int(payload["sub"]), role=str(payload["role"]))
+        return AccessClaims(
+            user_id=int(payload["sub"]), role=str(payload["role"]), session_id=str(payload["sid"])
+        )
     except (jwt.PyJWTError, ValueError) as exc:
         raise InvalidTokenError from exc
 

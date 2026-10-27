@@ -25,17 +25,18 @@ def test_hash_senuelo_nunca_coincide() -> None:
 
 
 def test_token_de_acceso_ida_y_vuelta() -> None:
-    token = security.create_access_token(user_id=7, role="Vendedor", now=utcnow())
+    token = security.create_access_token(user_id=7, role="Vendedor", session_id="s1", now=utcnow())
 
     claims = security.decode_access_token(token)
 
     assert claims.user_id == 7
     assert claims.role == "Vendedor"
+    assert claims.session_id == "s1"
 
 
 def test_token_de_acceso_vencido_se_rechaza() -> None:
     past = utcnow() - security.ACCESS_TOKEN_TTL - timedelta(seconds=1)
-    token = security.create_access_token(user_id=7, role="Vendedor", now=past)
+    token = security.create_access_token(user_id=7, role="Vendedor", session_id="s1", now=past)
 
     with pytest.raises(security.InvalidTokenError):
         security.decode_access_token(token)
