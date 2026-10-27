@@ -2,6 +2,7 @@
 
 uv run python -m app.scripts.users create --username admin --full-name "Ana" --role Administrador
 uv run python -m app.scripts.users unlock <usuario>
+uv run python -m app.scripts.users reset-password <usuario>
 """
 
 import argparse
@@ -11,8 +12,10 @@ from getpass import getpass
 
 from sqlalchemy.orm import Session
 
+from app.core.clock import utcnow
 from app.core.db import SessionLocal
 from app.core.errors import AppError
+from app.modules.auth import service as auth_service
 from app.modules.users import service
 from app.modules.users.models import Role
 
@@ -37,6 +40,10 @@ def run(
     create.add_argument("--role", choices=[r.value for r in Role], required=True)
     unlock = commands.add_parser("unlock", help="Desbloquear una cuenta bloqueada por intentos")
     unlock.add_argument("username")
+    reset = commands.add_parser(
+        "reset-password", help="Poner contraseña nueva, desbloquear y cerrar sus sesiones"
+    )
+    reset.add_argument("username")
     args = parser.parse_args(argv)
 
     try:
@@ -50,9 +57,16 @@ def run(
                     role=Role(args.role),
                 )
                 print(f"Usuario '{user.username}' creado con rol {user.role.value}.")
-            else:
+            elif args.command == "unlock":
                 user = service.unlock_user(session, args.username)
                 print(f"Usuario '{user.username}' desbloqueado.")
+            else:
+                if service.get_by_username(session, args.username) is None:
+                    raise AppError(404, "user_not_found", "El usuario no existe")
+                user = auth_service.reset_password(
+                    session, args.username, ask_new_password(prompt), utcnow()
+                )
+                print(f"Contraseña de '{user.username}' cambiada; sus sesiones se cerraron.")
     except AppError as exc:
         print(f"Error: {exc.message}", file=sys.stderr)
         return 1

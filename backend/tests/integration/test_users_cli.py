@@ -44,3 +44,15 @@ def test_unlock(db: Session) -> None:
     run(CREATE, TestSession, prompt_with("clave-segura-123", "clave-segura-123"))
     assert run(["unlock", "admin"], TestSession) == 0
     assert run(["unlock", "nadie"], TestSession) == 1
+
+
+def test_reset_password(db: Session) -> None:
+    run(CREATE, TestSession, prompt_with("clave-segura-123", "clave-segura-123"))
+
+    new = prompt_with("nueva-clave-456", "nueva-clave-456")
+    assert run(["reset-password", "admin"], TestSession, new) == 0
+
+    user = service.get_by_username(db, "admin")
+    assert user is not None
+    assert security.verify_password(user.password_hash, "nueva-clave-456")
+    assert run(["reset-password", "nadie"], TestSession) == 1
