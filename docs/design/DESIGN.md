@@ -66,7 +66,8 @@ Estado → badge: Pagada = green · Pendiente = yellow · Parcial = blue · Anul
 ```
 
 - **Sidebar:** logo = cuadro 36×36 `--primary`, radio 10, letra **"S"** blanca DM Sans 800 16 px; al lado "SIGEM" (DM Sans 700 16 px `#F1F5F9`) y debajo "Sistema de gestión empresarial" (11 px `--text-muted`).
-- **Menú** (en este orden, icono 18 px + texto): Inicio · Clientes · Productos · Vendedores · Proveedores · Facturas · Pagos · Reportes · Usuarios (este último solo para Administrador; el backend también lo bloquea). Ítem: padding 10×16, radio 8, 14 px 500, `--text-subtle`; hover `--sidebar-hover` con texto `#F1F5F9`; activo `--primary` con texto blanco.
+- **Menú** (en este orden, icono 18 px + texto): Inicio · Clientes · Productos · Vendedores · Proveedores · Facturas · Pagos · Reportes · Usuarios (este último solo para Administrador; el backend también lo bloquea). Ítem: padding 10×16, radio 8, 14 px 500, `--text-subtle`; hover `--sidebar-hover` con texto `#F1F5F9`; activo `--primary` con texto blanco. Ítem sin pantalla todavía (SIGEM-003): `aria-disabled="true"`, opacidad 0.45, sin hover (no está en el prototipo).
+- **Foco de teclado** (no está en el prototipo, WCAG 2.4.7): `outline: 2px solid --primary`, `outline-offset: 2px` en `:focus-visible`.
 - **Pie del sidebar:** avatar redondo 34 px `--primary` con la inicial; nombre (13 px 600) y rol (11 px); "Cerrar sesión" en `--danger`.
 - **Barra superior:** a la derecha, acciones de la pantalla (ej. "+ Nueva factura"), campana en `btn-icon` con punto rojo, avatar 34 px fondo `#DBEAFE` letra `--primary-dark`.
 - **Login:** fondo `linear-gradient(135deg, #1E293B, #0F172A)` con dos halos radiales (azul y verde); logo 56×56 radio 16 con sombra azul; "SIGEM" DM Sans 800 26 px; tarjeta blanca radio 16, padding 32, ancho máx. 420.
