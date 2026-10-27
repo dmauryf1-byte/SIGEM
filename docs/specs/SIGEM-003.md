@@ -1,7 +1,7 @@
 # SIGEM-003 — Esqueleto del frontend con el diseño de Figma
 
-- **Estado:** borrador, pendiente de aprobación del humano
-- **Rama:** `feat/SIGEM-003-esqueleto-frontend` (sale de SIGEM-002; se rebasa sobre `main` cuando esa se mergee)
+- **Estado:** aprobada (2026-10-27, el humano delegó la aprobación tras la revisión de Claude)
+- **Rama:** `feat/SIGEM-003-esqueleto-frontend` (sobre `main`, con SIGEM-002 ya mergeada)
 - **Depende de:** SIGEM-002 · **Bloquea a:** SIGEM-004 en adelante
 
 ## Objetivo
@@ -112,3 +112,13 @@ npm run lint; npm run format:check; npm run test -- --run; npx playwright test
 ## Preguntas abiertas
 
 - Ninguna. El usuario que muestra el sidebar es fijo ("Administrador") hasta SIGEM-004, que lo toma de la sesión.
+- Hasta SIGEM-004: el login con ambos campos llenos no navega (no hay sesión que crear) y "Cerrar sesión" enlaza a `index.html`.
+
+## Plan de subtareas (un commit cada una)
+
+1. **Backend sirve `frontend/`:** test pytest (`/` da HTML, health sigue 200) → montaje en `main.py` + `index.html` mínimo.
+2. **Tooling npm:** `package.json`, ESLint, Prettier, Vitest, Playwright; `npm run lint/format:check/test` corren.
+3. **CSS e iconos:** `css/sigem.css` con tokens y clases del prototipo; `js/shared/icons.js`.
+4. **Login:** `index.html` + `login.js` según `LoginScreen`, con validación de vacíos.
+5. **Marco:** `layout.js` con tests unitarios (TDD) + `dashboard.html`.
+6. **E2E y cierre:** `shell.spec.js`, capturas, AGENTS.md §8.
