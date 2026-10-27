@@ -23,6 +23,7 @@
 | 014 | QA visual y E2E | Comparar cada pantalla con Figma, Playwright de los flujos principales | 011–012 | |
 | 015 | CI | GitHub Actions: ruff, mypy, pytest, ESLint, Vitest, Playwright | 003 (puede adelantarse) | |
 | 016 | Despliegue | Docker Compose completo y guía de despliegue gratuito | 014–015 | |
+| 017 | Usuarios | Pantalla de usuarios para el Administrador: crear, editar, desactivar, desbloquear y restablecer contraseña (hoy por consola) | 004 | ✔ auth |
 
 ## Cómo se replica el diseño de Figma en cada pantalla
 

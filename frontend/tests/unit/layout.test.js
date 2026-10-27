@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NAV_ITEMS, renderSidebar, renderTopBar } from '../../js/shared/layout.js';
 
 const ADMIN = { name: 'Administrador', role: 'Administrador' };
@@ -65,6 +65,17 @@ describe('renderSidebar', () => {
     const logout = container.querySelector('.sidebar-item.logout');
     expect(logout.textContent).toBe('Cerrar sesión');
     expect(logout.getAttribute('href')).toBe('index.html');
+  });
+
+  it('Cerrar sesión llama a onLogout en vez de navegar', () => {
+    const onLogout = vi.fn();
+    renderSidebar(container, { current: 'dashboard', user: ADMIN, onLogout });
+    const click = new MouseEvent('click', { cancelable: true });
+
+    container.querySelector('.sidebar-item.logout').dispatchEvent(click);
+
+    expect(onLogout).toHaveBeenCalledOnce();
+    expect(click.defaultPrevented).toBe(true);
   });
 });
 

@@ -1,5 +1,12 @@
 import { expect, test } from '@playwright/test';
 
+async function login(page, username = 'e2e', password = process.env.E2E_PASSWORD) {
+  await page.goto('/');
+  await page.getByLabel('Usuario').fill(username);
+  await page.getByLabel('Contraseña').fill(password);
+  await page.getByRole('button', { name: 'Iniciar sesión' }).click();
+}
+
 test.describe('login', () => {
   test('la raíz muestra el login de SIGEM sin usuario demo', async ({ page }) => {
     await page.goto('/');
@@ -22,28 +29,52 @@ test.describe('login', () => {
     await expect(page.getByLabel('Usuario')).toBeFocused();
   });
 
-  test('llenar un campo quita solo su error', async ({ page }) => {
-    await page.goto('/');
-    await page.getByLabel('Usuario').fill('ana');
-    await page.getByRole('button', { name: 'Iniciar sesión' }).click();
-    await expect(page.locator('#username-error')).toBeHidden();
-    await expect(page.locator('#password-error')).toBeVisible();
+  test('credenciales malas muestran el error del servidor', async ({ page }) => {
+    await login(page, 'no-existe', 'una-clave-cualquiera');
+    await expect(page.getByRole('alert')).toHaveText('Usuario o contraseña incorrectos');
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.getByLabel('Contraseña')).toHaveValue('');
   });
 });
 
-test.describe('marco de la aplicación', () => {
-  test('dashboard muestra sidebar y barra superior con Inicio activo', async ({ page }) => {
+test.describe('sesión', () => {
+  test('sin sesión, el dashboard devuelve al login', async ({ page }) => {
     await page.goto('/dashboard.html');
+    await expect(page.getByRole('heading', { name: 'Iniciar sesión' })).toBeVisible();
+  });
+
+  test('login real muestra el marco con el usuario de la sesión', async ({ page }) => {
+    await login(page);
+    await expect(page).toHaveURL(/dashboard\.html$/);
+
     const nav = page.getByRole('navigation', { name: 'Módulos' });
-    await expect(nav.locator('.sidebar-item')).toHaveCount(9);
     await expect(nav.locator('[aria-current="page"]')).toHaveText('Inicio');
-    await expect(page.locator('.sidebar-name')).toHaveText('SIGEM');
-    await expect(page.getByRole('link', { name: 'Cerrar sesión' })).toBeVisible();
+    await expect(nav.locator('.sidebar-item')).toHaveCount(8); // Vendedor: sin "Usuarios"
+    await expect(nav.getByText('Usuarios')).toHaveCount(0);
+    await expect(page.locator('.sidebar-user-name')).toHaveText('Prueba E2E');
+    await expect(page.locator('.sidebar-user-role')).toHaveText('Vendedor');
     await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
   });
 
-  test('estilos calculados coinciden con DESIGN.md', async ({ page }) => {
+  test('las cookies de sesión no son legibles desde JavaScript', async ({ page }) => {
+    await login(page);
+    await expect(page).toHaveURL(/dashboard\.html$/);
+    expect(await page.evaluate(() => document.cookie)).toBe('');
+  });
+
+  test('Cerrar sesión vuelve al login y no deja volver al dashboard', async ({ page }) => {
+    await login(page);
+    await expect(page).toHaveURL(/dashboard\.html$/);
+
+    await page.getByRole('link', { name: 'Cerrar sesión' }).click();
+    await expect(page.getByRole('heading', { name: 'Iniciar sesión' })).toBeVisible();
+
     await page.goto('/dashboard.html');
+    await expect(page.getByRole('heading', { name: 'Iniciar sesión' })).toBeVisible();
+  });
+
+  test('estilos calculados coinciden con DESIGN.md', async ({ page }) => {
+    await login(page);
     const sidebar = page.locator('.sidebar');
     await expect(sidebar).toHaveCSS('background-color', 'rgb(30, 41, 59)');
     await expect(sidebar).toHaveCSS('width', '232px');
@@ -54,11 +85,5 @@ test.describe('marco de la aplicación', () => {
     );
     await expect(page.locator('.topbar-title')).toHaveCSS('font-family', /DM Sans/);
     await expect(page.locator('.app-content')).toHaveCSS('background-color', 'rgb(241, 245, 249)');
-  });
-
-  test('Cerrar sesión vuelve al login', async ({ page }) => {
-    await page.goto('/dashboard.html');
-    await page.getByRole('link', { name: 'Cerrar sesión' }).click();
-    await expect(page.getByRole('heading', { name: 'Iniciar sesión' })).toBeVisible();
   });
 });
