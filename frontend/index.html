@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Iniciar sesión · SIGEM</title>
+    <link rel="stylesheet" href="css/sigem.css" />
+    <script type="module" src="js/login.js"></script>
+  </head>
+  <body>
+    <main class="login-page">
+      <div class="login-wrap">
+        <div class="login-brand">
+          <div class="login-logo" aria-hidden="true">S</div>
+          <h1 class="login-name">SIGEM</h1>
+          <p class="login-tagline">Sistema de Gestión Empresarial y de Facturación</p>
+        </div>
+        <form class="login-card" id="login-form" novalidate>
+          <h2 class="login-title">Iniciar sesión</h2>
+          <p class="login-subtitle">Ingresa tus credenciales para continuar</p>
+          <div class="form-group">
+            <label class="form-label" for="username"
+              >Usuario<span class="form-required" aria-hidden="true">*</span></label
+            >
+            <input
+              class="form-input"
+              id="username"
+              name="username"
+              autocomplete="username"
+              required
+              aria-describedby="username-error"
+            />
+            <div class="form-error" id="username-error" hidden></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="password"
+              >Contraseña<span class="form-required" aria-hidden="true">*</span></label
+            >
+            <input
+              class="form-input"
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="••••••••"
+              required
+              aria-describedby="password-error"
+            />
+            <div class="form-error" id="password-error" hidden></div>
+          </div>
+          <button class="btn-primary login-submit" type="submit">Iniciar sesión</button>
+        </form>
+        <p class="legal-notice">
+          SIGEM genera documentos de venta internos. No es facturación electrónica DIAN.
+        </p>
+      </div>
+    </main>
+  </body>
+</html>
