@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pydantic import SecretStr
+from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL
 
@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     db_name: str = "sigem"
     db_user: str = "sigem"
     mysql_password: SecretStr
+    jwt_secret: SecretStr = Field(min_length=32)  # HS256 pide al menos 32 bytes (RFC 7518)
+    cookie_secure: bool = True  # en local por http se pone false en .env
 
     def database_url(self, database: str | None = None) -> URL:
         # URL.create escapa la contraseña: puede tener caracteres especiales
