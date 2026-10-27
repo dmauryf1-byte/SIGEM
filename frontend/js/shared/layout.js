@@ -41,7 +41,7 @@ function navLink(item, current) {
   return link;
 }
 
-export function renderSidebar(container, { current, user }) {
+export function renderSidebar(container, { current, user, onLogout }) {
   const aside = el('aside', 'sidebar');
 
   const brand = el('div', 'sidebar-brand');
@@ -76,6 +76,12 @@ export function renderSidebar(container, { current, user }) {
   const logout = el('a', 'sidebar-item logout');
   logout.href = 'index.html';
   logout.append(icon('logOut'), 'Cerrar sesión');
+  if (onLogout) {
+    logout.addEventListener('click', (event) => {
+      event.preventDefault();
+      onLogout();
+    });
+  }
 
   const footer = el('div', 'sidebar-footer');
   footer.append(userBox, logout);
