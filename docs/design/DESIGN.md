@@ -90,7 +90,7 @@ Los valores exactos de cada clase están en `src/index.css` del prototipo y se c
 | "FactuPyme", logo "F" | "SIGEM", logo "S" | Nombre del proyecto |
 | Usuario demo `admin/1234` en el login | Se elimina | Seguridad |
 | "¿Olvidaste tu contraseña?" por correo | Se oculta en v1; el administrador restablece | Sin servicio de correo ($0) |
-| Sin aviso legal | "Documento interno — no es factura electrónica DIAN" en facturas y PDF | AGENTS.md §3.10 |
+| Sin aviso legal | "Documento interno — no es factura electrónica DIAN" en facturas y PDF; en el login, bajo la tarjeta, "SIGEM genera documentos de venta internos. No es facturación electrónica DIAN." (12 px, `--text-subtle`) | AGENTS.md §3.10 |
 | Estado de factura "Vencida" | Pendiente / Parcial / Pagada / Anulada | Reglas de pago de AGENTS.md §3 |
 | Sin módulo de proveedores | Ítem "Proveedores" (icono `truck` de Feather) con la pantalla de lista estándar | Requisito de SIGEM (PLAN.md, SIGEM-008) |
 | Ancho fijo de escritorio | Mismo diseño; mínimo soportado 1280 px | App interna de escritorio |

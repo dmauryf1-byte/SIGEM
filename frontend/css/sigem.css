@@ -328,6 +328,13 @@ body {
   font-size: 13px;
   margin-bottom: 24px;
 }
+/* AGENTS.md §3.10: aviso de alcance legal (no está en el prototipo) */
+.legal-notice {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-subtle);
+}
 .login-submit {
   width: 100%;
   justify-content: center;

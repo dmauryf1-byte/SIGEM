@@ -9,6 +9,7 @@ test.describe('login', () => {
     await expect(page.getByText(/admin/i)).toHaveCount(0);
     await expect(page.getByText(/1234/)).toHaveCount(0);
     await expect(page.getByText(/olvidaste/i)).toHaveCount(0);
+    await expect(page.getByText('No es facturación electrónica DIAN.')).toBeVisible();
     expect((await page.locator('.login-wrap').boundingBox()).width).toBe(420);
   });
 
