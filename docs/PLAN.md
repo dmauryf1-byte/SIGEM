@@ -24,6 +24,7 @@
 | 015 | CI | GitHub Actions: ruff, mypy, pytest, ESLint, Vitest, Playwright | 003 (puede adelantarse) | |
 | 016 | Despliegue | Docker Compose completo y guía de despliegue gratuito | 014–015 | |
 | 017 | Usuarios | Pantalla de usuarios para el Administrador: crear, editar, desactivar, desbloquear y restablecer contraseña (hoy por consola) | 004 | ✔ auth |
+| 018 | Modelo de datos | Las 7 tablas del negocio del diagrama del humano (migración `0002`, [ADR-0003](adr/0003-modelo-de-datos-en-espanol.md)); 005–010 construyen sobre ellas sin crear tablas | 004 | ✔ invoices, payments, inventory |
 
 ## Cómo se replica el diseño de Figma en cada pantalla
 

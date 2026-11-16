@@ -150,4 +150,5 @@ cd frontend && npx playwright test
 - **SIGEM-002 mergeada:** backend FastAPI + MySQL 8.4 en Docker, `GET /api/v1/health` 200/503 con tests contra MySQL real, Alembic configurado ([ADR-0002](docs/adr/0002-sqlalchemy-sincrono.md)).
 - **SIGEM-003 mergeada:** FastAPI sirve `frontend/` (solo páginas, `css/` y `js/`), login y marco de la app con el diseño de Figma, ESLint + Prettier + Vitest + Playwright.
 - **SIGEM-004 completada** (PR en revisión): usuarios, Argon2id, JWT en cookies `HttpOnly` con renovación rotada (45 min de inactividad, tope de 1 día), bloqueo de 5 intentos por 15 min, RBAC. Usuarios por consola: `uv run python -m app.scripts.users create|unlock|reset-password`.
+- **SIGEM-018 completada** (sobre la rama de SIGEM-004): las 7 tablas del negocio del diagrama del humano, en español ([ADR-0003](docs/adr/0003-modelo-de-datos-en-espanol.md)); SIGEM-005 a 010 ya no crean tablas.
 - **Siguiente:** SIGEM-017 (pantalla Usuarios) o SIGEM-005 (Clientes); decide el humano.

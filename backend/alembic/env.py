@@ -6,6 +6,12 @@ from sqlalchemy import create_engine
 from app.core.config import settings
 from app.core.db import Base
 from app.modules.auth import models as auth_models  # noqa: F401  registra las tablas en Base
+from app.modules.customers import models as customers_models  # noqa: F401
+from app.modules.invoices import models as invoices_models  # noqa: F401
+from app.modules.payments import models as payments_models  # noqa: F401
+from app.modules.products import models as products_models  # noqa: F401
+from app.modules.salespeople import models as salespeople_models  # noqa: F401
+from app.modules.suppliers import models as suppliers_models  # noqa: F401
 from app.modules.users import models as users_models  # noqa: F401
 
 if context.config.config_file_name is not None:
