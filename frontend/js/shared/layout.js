@@ -1,21 +1,25 @@
-// Sidebar y barra superior del prototipo (App.tsx: Sidebar, TopBar). Todo con createElement/textContent (AGENTS.md §5.7).
+// Menú lateral y barra superior del prototipo (App.tsx: Sidebar y TopBar).
+// Todo se crea con createElement y textContent para evitar XSS (AGENTS.md §5.7).
 import { icon } from './icons.js';
 
-// href null = el módulo aún no tiene pantalla; cada tarea de módulo pone el suyo
+// ─── Opciones del menú ──────────────────────────────────────────────────────
+// key = nombre de la pantalla, label = texto que se ve, href = página que abre
 export const NAV_ITEMS = [
   { key: 'dashboard', label: 'Inicio', icon: 'home', href: 'dashboard.html' },
-  { key: 'clientes', label: 'Clientes', icon: 'users', href: null },
-  { key: 'productos', label: 'Productos', icon: 'box', href: null },
-  { key: 'vendedores', label: 'Vendedores', icon: 'userCheck', href: null },
-  { key: 'proveedores', label: 'Proveedores', icon: 'truck', href: null },
-  { key: 'facturas', label: 'Facturas', icon: 'fileText', href: null },
-  { key: 'pagos', label: 'Pagos', icon: 'creditCard', href: null },
-  { key: 'reportes', label: 'Reportes', icon: 'barChart', href: null },
-  { key: 'usuarios', label: 'Usuarios', icon: 'shield', href: null, adminOnly: true },
+  { key: 'clientes', label: 'Clientes', icon: 'users', href: 'clientes.html' },
+  { key: 'productos', label: 'Productos', icon: 'box', href: 'productos.html' },
+  { key: 'vendedores', label: 'Vendedores', icon: 'userCheck', href: 'vendedores.html' },
+  { key: 'proveedores', label: 'Proveedores', icon: 'truck', href: 'proveedores.html' },
+  { key: 'facturas', label: 'Facturas', icon: 'fileText', href: 'facturas.html' },
+  { key: 'pagos', label: 'Pagos', icon: 'creditCard', href: 'pagos.html' },
+  { key: 'reportes', label: 'Reportes', icon: 'barChart', href: 'reportes.html' },
+  { key: 'usuarios', label: 'Usuarios', icon: 'shield', href: 'usuarios.html', adminOnly: true },
 ];
 
 const ADMIN_ROLE = 'Administrador';
 
+// ─── Ayudantes ──────────────────────────────────────────────────────────────
+// Crea una etiqueta con clase y texto en una sola línea
 function el(tag, className, text) {
   const node = document.createElement(tag);
   if (className) node.className = className;
@@ -23,17 +27,14 @@ function el(tag, className, text) {
   return node;
 }
 
+// Primera letra del nombre, para el círculo del avatar
 const initial = (name) => name.trim().charAt(0).toUpperCase();
 
+// Un enlace del menú; si es la pantalla actual, se pinta azul (activo)
 function navLink(item, current) {
   const link = el('a', 'sidebar-item');
+  link.href = item.href;
   link.append(icon(item.icon), item.label);
-  if (!item.href) {
-    link.setAttribute('aria-disabled', 'true');
-    link.title = 'Disponible próximamente';
-  } else {
-    link.href = item.href;
-  }
   if (item.key === current) {
     link.classList.add('active');
     link.setAttribute('aria-current', 'page');
@@ -41,9 +42,11 @@ function navLink(item, current) {
   return link;
 }
 
+// ─── Menú lateral ───────────────────────────────────────────────────────────
 export function renderSidebar(container, { current, user, onLogout }) {
   const aside = el('aside', 'sidebar');
 
+  // Logo "S" con el nombre SIGEM
   const brand = el('div', 'sidebar-brand');
   const brandText = el('div');
   brandText.append(
@@ -54,15 +57,17 @@ export function renderSidebar(container, { current, user, onLogout }) {
   logo.setAttribute('aria-hidden', 'true');
   brand.append(logo, brandText);
 
+  // Lista de módulos. "Usuarios" solo lo ve el Administrador.
+  // Esto solo oculta la opción: el permiso real lo valida el backend (AGENTS.md §4)
   const nav = el('nav', 'sidebar-nav');
   nav.setAttribute('aria-label', 'Módulos');
-  // Solo oculta la opción: el backend valida el permiso (AGENTS.md §4)
   const items = NAV_ITEMS.filter((item) => !item.adminOnly || user.role === ADMIN_ROLE);
   nav.append(...items.map((item) => navLink(item, current)));
 
   const top = el('div', 'sidebar-top');
   top.append(brand, nav);
 
+  // Parte de abajo: usuario conectado y botón de cerrar sesión
   const userBox = el('div', 'sidebar-user');
   const userText = el('div', 'sidebar-user-text');
   userText.append(
@@ -90,13 +95,29 @@ export function renderSidebar(container, { current, user, onLogout }) {
   container.replaceChildren(aside);
 }
 
-export function renderTopBar(container, { title, subtitle, user }) {
+// ─── Botón de la barra superior ─────────────────────────────────────────────
+// action = { label, icon, id, variant: 'primary' | 'secondary', modal: 'id-del-modal' }
+function actionButton(action) {
+  const button = el('button', action.variant === 'secondary' ? 'btn-secondary' : 'btn-primary');
+  button.type = 'button';
+  if (action.id) button.id = action.id;
+  // data-open hace que ui.js abra ese modal al hacer clic
+  if (action.modal) button.dataset.open = action.modal;
+  if (action.icon) button.append(icon(action.icon, 16));
+  button.append(action.label);
+  return button;
+}
+
+// ─── Barra superior ─────────────────────────────────────────────────────────
+export function renderTopBar(container, { title, subtitle, user, actions = [] }) {
   const header = el('header', 'topbar');
 
+  // Título y subtítulo de la pantalla
   const heading = el('div');
   heading.append(el('h1', 'topbar-title', title));
   if (subtitle) heading.append(el('p', 'topbar-subtitle', subtitle));
 
+  // Campana de notificaciones con el punto rojo
   const bell = el('button', 'btn-icon notification-btn');
   bell.type = 'button';
   bell.setAttribute('aria-label', 'Notificaciones');
@@ -105,9 +126,10 @@ export function renderTopBar(container, { title, subtitle, user }) {
   const avatar = el('div', 'avatar avatar-light', initial(user.name));
   avatar.setAttribute('aria-hidden', 'true');
 
-  const actions = el('div', 'topbar-actions');
-  actions.append(bell, avatar);
+  // Botones propios de la pantalla (ej. "+ Nuevo cliente") + campana + avatar
+  const actionsBox = el('div', 'topbar-actions');
+  actionsBox.append(...actions.map(actionButton), bell, avatar);
 
-  header.append(heading, actions);
+  header.append(heading, actionsBox);
   container.replaceChildren(header);
 }

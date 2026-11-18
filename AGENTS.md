@@ -14,7 +14,8 @@
 | Frontend | HTML5 + CSS + JavaScript (ES modules nativos), sin framework ni paso de build ([ADR-0001](docs/adr/0001-frontend-html-css-js-y-diseno-figma.md)) |
 | Diseño | Prototipo de Figma Make → tokens y componentes en `docs/design/DESIGN.md` (única fuente visual) |
 | Iconos | SVG de línea inline (los del prototipo de Figma) |
-| Backend | Python 3.12+, FastAPI, Pydantic v2 (también sirve `frontend/` como estáticos) |
+| Servidor web | Flask (`web/app.py`): sirve las páginas de `frontend/` y reenvía `/api` a FastAPI ([ADR-0004](docs/adr/0004-flask-sirve-el-frontend.md)) |
+| Backend | Python 3.12+, FastAPI, Pydantic v2 (solo la API `/api/v1`) |
 | ORM / migraciones | SQLAlchemy 2.x (estilo 2.0, tipado) + Alembic |
 | Base de datos | MySQL Community 8.4 (InnoDB, utf8mb4) |
 | Auth | JWT (access corto + refresh) + RBAC; contraseñas con Argon2 o bcrypt |
@@ -51,9 +52,13 @@ backend/
   alembic/
   tests/
     unit/  integration/
+web/
+  app.py                   # Flask: páginas permitidas, css/, js/ y reenvío de /api a FastAPI (sin lógica de negocio)
+  tests/
 frontend/
-  index.html               # login
-  <modulo>.html            # una página por pantalla: dashboard.html, clientes.html, facturas.html…
+  html/
+    index.html             # login
+    <modulo>.html          # una página por pantalla: dashboard.html, clientes.html, facturas.html…
   css/sigem.css            # tokens y componentes de docs/design/DESIGN.md
   js/
     shared/                # api.js (fetch + errores), auth.js, layout.js (sidebar/topbar), ui.js (modal, toast, tabla)
@@ -129,12 +134,17 @@ frontend/
 # Backend
 cd backend && uv run ruff check . && uv run ruff format --check . && uv run mypy app && uv run pytest --cov=app
 
+# Servidor web (Flask)
+cd web && uv run ruff check . && uv run ruff format --check . && uv run mypy app.py tests && uv run pytest
+
 # Frontend (sin build: el navegador carga los archivos tal cual)
 cd frontend && npm run lint && npm run format:check && npm run test -- --run
 
-# E2E (con docker compose up)
+# E2E (con docker compose up; Playwright arranca FastAPI en 8000 y Flask en 5000)
 cd frontend && npx playwright test
 ```
+
+**Ejecutar la app en local:** `docker compose up -d mysql`, luego `cd backend && uv run uvicorn app.main:app --port 8000` y, en otra terminal, `cd web && uv run flask --app app run --port 5000` → http://127.0.0.1:5000/
 
 **Definition of Done:** criterios de aceptación cumplidos · tests nuevos en verde · comandos anteriores en verde · migración incluida si aplica · documentación actualizada si aplica · revisión cruzada hecha · el humano entiende el cambio.
 
@@ -151,4 +161,5 @@ cd frontend && npx playwright test
 - **SIGEM-003 mergeada:** FastAPI sirve `frontend/` (solo páginas, `css/` y `js/`), login y marco de la app con el diseño de Figma, ESLint + Prettier + Vitest + Playwright.
 - **SIGEM-004 completada** (PR en revisión): usuarios, Argon2id, JWT en cookies `HttpOnly` con renovación rotada (45 min de inactividad, tope de 1 día), bloqueo de 5 intentos por 15 min, RBAC. Usuarios por consola: `uv run python -m app.scripts.users create|unlock|reset-password`.
 - **SIGEM-018 completada** (sobre la rama de SIGEM-004): las 7 tablas del negocio del diagrama del humano, en español ([ADR-0003](docs/adr/0003-modelo-de-datos-en-espanol.md)); SIGEM-005 a 010 ya no crean tablas.
+- **SIGEM-019 completada** (sobre la rama de SIGEM-018): Flask sirve el frontend y reenvía `/api` a FastAPI ([ADR-0004](docs/adr/0004-flask-sirve-el-frontend.md)); todas las pantallas del prototipo con el diseño de Figma (Clientes, Productos, Vendedores, Proveedores, Facturas, Nueva factura, Pagos, Reportes, Usuarios). Los listados se ven vacíos y los formularios validan, pero guardar llega con la API de cada módulo (005–012, 017).
 - **Siguiente:** SIGEM-017 (pantalla Usuarios) o SIGEM-005 (Clientes); decide el humano.

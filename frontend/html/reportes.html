@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Datos de la página: idioma, tamaño en el celular/PC y título de la pestaña -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reportes · SIGEM</title>
+    <!-- Estilos de SIGEM: colores, letras y componentes del diseño de Figma -->
+    <link rel="stylesheet" href="css/sigem.css" />
+    <!-- Código JavaScript de esta pantalla -->
+    <script type="module" src="js/reportes.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <!-- Menú lateral: lo dibuja js/shared/layout.js con el usuario de la sesión -->
+      <div id="sidebar"></div>
+      <div class="app-main">
+        <!-- Barra superior: título de la pantalla y sus botones (también la dibuja layout.js) -->
+        <div id="topbar"></div>
+        <main class="app-content">
+          <!-- Aviso de la página: aparece al guardar o al usar algo que aún no está conectado -->
+          <div class="alert page-alert" id="page-alert" role="status" hidden></div>
+          <!-- Período del reporte: fecha inicial, fecha final y botón Consultar -->
+          <form class="card filter-card" id="form-periodo">
+            <div class="form-group">
+              <label class="form-label" for="desde">Desde</label>
+              <input class="form-input input-date" id="desde" type="date" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="hasta">Hasta</label>
+              <input class="form-input input-date" id="hasta" type="date" />
+            </div>
+            <button class="btn-primary" type="submit">Consultar</button>
+          </form>
+          <!-- Pestañas: cada una muestra un reporte distinto -->
+          <div class="tabs" id="tabs-reportes" role="tablist" aria-label="Tipo de reporte">
+            <button
+              class="tab-btn active"
+              id="tab-clientes-tab"
+              type="button"
+              role="tab"
+              aria-controls="tab-clientes"
+              aria-selected="true"
+            >
+              Ventas por cliente
+            </button>
+            <button
+              class="tab-btn"
+              id="tab-inventario-tab"
+              type="button"
+              role="tab"
+              aria-controls="tab-inventario"
+              aria-selected="false"
+            >
+              Inventario
+            </button>
+            <button
+              class="tab-btn"
+              id="tab-pagos-tab"
+              type="button"
+              role="tab"
+              aria-controls="tab-pagos"
+              aria-selected="false"
+            >
+              Pagos y recaudos
+            </button>
+            <button
+              class="tab-btn"
+              id="tab-vendedores-tab"
+              type="button"
+              role="tab"
+              aria-controls="tab-vendedores"
+              aria-selected="false"
+            >
+              Ventas por vendedor
+            </button>
+          </div>
+          <!-- Pestaña 1: ventas por cliente (tabla + gráfica) -->
+          <div id="tab-clientes" role="tabpanel" aria-labelledby="tab-clientes-tab">
+            <div class="grid-2">
+              <section class="card">
+                <div class="card-header">
+                  <h2 class="card-title">Tabla de ventas por cliente</h2>
+                </div>
+                <table class="table-base">
+                  <thead>
+                    <tr>
+                      <th scope="col">Cliente</th>
+                      <th scope="col">Facturas</th>
+                      <th scope="col">Total ventas</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="empty-row">
+                      <td colspan="3">Sin datos en el período</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <section class="card card-padded">
+                <h2 class="card-title">Ventas por cliente</h2>
+                <div class="chart-empty">La gráfica aparece cuando haya facturas</div>
+              </section>
+            </div>
+          </div>
+          <!-- Pestaña 2: inventario valorizado -->
+          <div id="tab-inventario" role="tabpanel" aria-labelledby="tab-inventario-tab" hidden>
+            <section class="card">
+              <div class="card-header"><h2 class="card-title">Inventario de productos</h2></div>
+              <table class="table-base">
+                <thead>
+                  <tr>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Proveedor</th>
+                    <th scope="col">Precio unit.</th>
+                    <th scope="col">Stock</th>
+                    <th scope="col">Valor inventario</th>
+                    <th scope="col">Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="empty-row">
+                    <td colspan="6">Sin productos registrados</td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- Pie de la tabla con el valor total del inventario -->
+              <div class="table-footer">Total en inventario: <strong>$0</strong></div>
+            </section>
+          </div>
+          <!-- Pestaña 3: pagos recibidos -->
+          <div id="tab-pagos" role="tabpanel" aria-labelledby="tab-pagos-tab" hidden>
+            <section class="card">
+              <div class="card-header"><h2 class="card-title">Pagos y recaudos</h2></div>
+              <table class="table-base">
+                <thead>
+                  <tr>
+                    <th scope="col">Factura</th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Método</th>
+                    <th scope="col">Monto</th>
+                    <th scope="col">Fecha</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="empty-row">
+                    <td colspan="5">Sin pagos registrados</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+          <!-- Pestaña 4: ventas por vendedor (tabla + gráfica) -->
+          <div id="tab-vendedores" role="tabpanel" aria-labelledby="tab-vendedores-tab" hidden>
+            <div class="grid-2">
+              <section class="card">
+                <div class="card-header"><h2 class="card-title">Ventas por vendedor</h2></div>
+                <table class="table-base">
+                  <thead>
+                    <tr>
+                      <th scope="col">Vendedor</th>
+                      <th scope="col">Facturas</th>
+                      <th scope="col">Total ventas</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="empty-row">
+                      <td colspan="3">Sin datos</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <section class="card card-padded">
+                <h2 class="card-title">Rendimiento de vendedores</h2>
+                <div class="chart-empty">La gráfica aparece cuando haya facturas</div>
+              </section>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

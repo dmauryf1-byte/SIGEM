@@ -1,24 +1,32 @@
 <!doctype html>
 <html lang="es">
   <head>
+    <!-- Datos de la página: idioma, tamaño en el celular/PC y título de la pestaña -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Iniciar sesión · SIGEM</title>
+    <!-- Estilos de SIGEM: colores, letras y componentes del diseño de Figma -->
     <link rel="stylesheet" href="css/sigem.css" />
+    <!-- Código del login: valida los campos y envía usuario y contraseña al backend -->
     <script type="module" src="js/login.js"></script>
   </head>
   <body>
+    <!-- Fondo oscuro con degradado que ocupa toda la pantalla -->
     <main class="login-page">
       <div class="login-wrap">
+        <!-- Logo "S", nombre y descripción del sistema -->
         <div class="login-brand">
           <div class="login-logo" aria-hidden="true">S</div>
           <h1 class="login-name">SIGEM</h1>
           <p class="login-tagline">Sistema de Gestión Empresarial y de Facturación</p>
         </div>
+        <!-- Tarjeta blanca con el formulario de inicio de sesión -->
         <form class="login-card" id="login-form" novalidate>
           <h2 class="login-title">Iniciar sesión</h2>
           <p class="login-subtitle">Ingresa tus credenciales para continuar</p>
+          <!-- Aviso rojo para errores del servidor (ej. contraseña incorrecta) -->
           <div class="alert alert-error login-alert" id="login-alert" role="alert" hidden></div>
+          <!-- Campo usuario -->
           <div class="form-group">
             <label class="form-label" for="username"
               >Usuario<span class="form-required" aria-hidden="true">*</span></label
@@ -33,6 +41,7 @@
             />
             <div class="form-error" id="username-error" hidden></div>
           </div>
+          <!-- Campo contraseña (se ve con puntos) -->
           <div class="form-group">
             <label class="form-label" for="password"
               >Contraseña<span class="form-required" aria-hidden="true">*</span></label
@@ -49,8 +58,10 @@
             />
             <div class="form-error" id="password-error" hidden></div>
           </div>
+          <!-- Botón para entrar -->
           <button class="btn-primary login-submit" type="submit">Iniciar sesión</button>
         </form>
+        <!-- Aviso legal obligatorio: SIGEM no hace facturación electrónica (AGENTS.md §3.10) -->
         <p class="legal-notice">
           SIGEM genera documentos de venta internos. No es facturación electrónica DIAN.
         </p>

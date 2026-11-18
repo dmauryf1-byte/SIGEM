@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Datos de la página: idioma, tamaño en el celular/PC y título de la pestaña -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Clientes · SIGEM</title>
+    <!-- Estilos de SIGEM: colores, letras y componentes del diseño de Figma -->
+    <link rel="stylesheet" href="css/sigem.css" />
+    <!-- Código JavaScript de esta pantalla -->
+    <script type="module" src="js/clientes.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <!-- Menú lateral: lo dibuja js/shared/layout.js con el usuario de la sesión -->
+      <div id="sidebar"></div>
+      <div class="app-main">
+        <!-- Barra superior: título de la pantalla y sus botones (también la dibuja layout.js) -->
+        <div id="topbar"></div>
+        <main class="app-content">
+          <!-- Aviso de la página: aparece al guardar o al usar algo que aún no está conectado -->
+          <div class="alert page-alert" id="page-alert" role="status" hidden></div>
+          <!-- Tarjeta con el buscador, los filtros y la tabla de clientes -->
+          <section class="card">
+            <!-- Buscador y filtros de la lista -->
+            <div class="card-toolbar">
+              <div class="search-input-wrap toolbar-search">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input
+                  class="form-input"
+                  type="search"
+                  placeholder="Buscar por nombre, documento o ciudad..."
+                  aria-label="Buscar clientes"
+                />
+              </div>
+              <!-- Botones de filtro: el azul es el que está aplicado -->
+              <div class="chips" role="group" aria-label="Filtrar">
+                <button class="chip active" type="button" aria-pressed="true">Todos</button
+                ><button class="chip" type="button" aria-pressed="false">Activo</button
+                ><button class="chip" type="button" aria-pressed="false">Inactivo</button>
+              </div>
+            </div>
+            <!-- Tabla del listado: las filas llegan del backend cuando el módulo tenga API -->
+            <table class="table-base" aria-label="Clientes">
+              <thead>
+                <tr>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Documento</th>
+                  <th scope="col">Teléfono</th>
+                  <th scope="col">Dirección</th>
+                  <th scope="col">Ciudad</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="empty-row">
+                  <td colspan="7">Aún no hay clientes registrados</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </main>
+      </div>
+    </div>
+    <!-- Ventana (modal) con el formulario de nuevo cliente. Los campos son los de la tabla clientes -->
+    <div class="modal-overlay" id="modal-cliente" hidden>
+      <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-cliente-title">
+        <!-- Encabezado del modal con el botón X para cerrar -->
+        <div class="modal-header">
+          <h2 class="modal-title" id="modal-cliente-title">Nuevo cliente</h2>
+          <button class="btn-icon" type="button" data-close aria-label="Cerrar">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <!-- Formulario: los campos con * son obligatorios -->
+        <form class="modal-body" id="form-cliente" novalidate>
+          <div class="form-grid">
+            <div class="form-group span-2">
+              <label class="form-label" for="nombre"
+                >Nombre<span class="form-required" aria-hidden="true">*</span></label
+              >
+              <input
+                class="form-input"
+                id="nombre"
+                name="nombre"
+                type="text"
+                placeholder="Ferretería El Clavo"
+                required
+                data-error="El nombre es obligatorio"
+                aria-describedby="nombre-error"
+              />
+              <div class="form-error" id="nombre-error" hidden></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="tipo_documento"
+                >Tipo de documento<span class="form-required" aria-hidden="true">*</span></label
+              >
+              <select
+                class="form-input select-input"
+                id="tipo_documento"
+                name="tipo_documento"
+                required
+                data-error="Elige el tipo de documento"
+                aria-describedby="tipo_documento-error"
+              >
+                <option value="">Seleccionar...</option>
+                <option>NIT</option>
+                <option>Cédula de ciudadanía</option>
+                <option>Cédula de extranjería</option>
+                <option>Pasaporte</option>
+              </select>
+              <div class="form-error" id="tipo_documento-error" hidden></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="documento_id"
+                >Número de documento<span class="form-required" aria-hidden="true">*</span></label
+              >
+              <input
+                class="form-input"
+                id="documento_id"
+                name="documento_id"
+                type="text"
+                placeholder="900.123.456-1"
+                required
+                data-error="El documento es obligatorio"
+                aria-describedby="documento_id-error"
+              />
+              <div class="form-error" id="documento_id-error" hidden></div>
+            </div>
+            <div class="form-group span-2">
+              <label class="form-label" for="razon_social">Razón social</label>
+              <input
+                class="form-input"
+                id="razon_social"
+                name="razon_social"
+                type="text"
+                placeholder="Empresa S.A.S"
+                aria-describedby="razon_social-error"
+              />
+              <div class="form-error" id="razon_social-error" hidden></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="telefono"
+                >Teléfono<span class="form-required" aria-hidden="true">*</span></label
+              >
+              <input
+                class="form-input"
+                id="telefono"
+                name="telefono"
+                type="tel"
+                placeholder="310 123 4567"
+                required
+                data-error="El teléfono es obligatorio"
+                aria-describedby="telefono-error"
+              />
+              <div class="form-error" id="telefono-error" hidden></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="ciudad">Ciudad</label>
+              <input
+                class="form-input"
+                id="ciudad"
+                name="ciudad"
+                type="text"
+                placeholder="Bogotá"
+                aria-describedby="ciudad-error"
+              />
+              <div class="form-error" id="ciudad-error" hidden></div>
+            </div>
+            <div class="form-group span-2">
+              <label class="form-label" for="direccion"
+                >Dirección<span class="form-required" aria-hidden="true">*</span></label
+              >
+              <input
+                class="form-input"
+                id="direccion"
+                name="direccion"
+                type="text"
+                placeholder="Calle 10 # 20-30"
+                required
+                data-error="La dirección es obligatoria"
+                aria-describedby="direccion-error"
+              />
+              <div class="form-error" id="direccion-error" hidden></div>
+            </div>
+          </div>
+          <!-- Botones: Cancelar cierra el modal, Guardar valida y envía -->
+          <div class="modal-actions">
+            <button class="btn-secondary" type="button" data-close>Cancelar</button>
+            <button class="btn-primary" type="submit">Guardar cliente</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

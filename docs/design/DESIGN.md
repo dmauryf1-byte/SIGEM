@@ -66,7 +66,7 @@ Estado → badge: Pagada = green · Pendiente = yellow · Parcial = blue · Anul
 ```
 
 - **Sidebar:** logo = cuadro 36×36 `--primary`, radio 10, letra **"S"** blanca DM Sans 800 16 px; al lado "SIGEM" (DM Sans 700 16 px `#F1F5F9`) y debajo "Sistema de gestión empresarial" (11 px `--text-muted`).
-- **Menú** (en este orden, icono 18 px + texto): Inicio · Clientes · Productos · Vendedores · Proveedores · Facturas · Pagos · Reportes · Usuarios (este último solo para Administrador; el backend también lo bloquea). Ítem: padding 10×16, radio 8, 14 px 500, `--text-subtle`; hover `--sidebar-hover` con texto `#F1F5F9`; activo `--primary` con texto blanco. Ítem sin pantalla todavía (SIGEM-003): `aria-disabled="true"`, opacidad 0.45, sin hover (no está en el prototipo).
+- **Menú** (en este orden, icono 18 px + texto): Inicio · Clientes · Productos · Vendedores · Proveedores · Facturas · Pagos · Reportes · Usuarios (este último solo para Administrador; el backend también lo bloquea). Ítem: padding 10×16, radio 8, 14 px 500, `--text-subtle`; hover `--sidebar-hover` con texto `#F1F5F9`; activo `--primary` con texto blanco. Desde SIGEM-019 todos los ítems tienen pantalla.
 - **Foco de teclado** (no está en el prototipo, WCAG 2.4.7): `outline: 2px solid --primary`, `outline-offset: 2px` en `:focus-visible`.
 - **Pie del sidebar:** avatar redondo 34 px `--primary` con la inicial; nombre (13 px 600) y rol (11 px); "Cerrar sesión" en `--danger`.
 - **Barra superior:** a la derecha, acciones de la pantalla (ej. "+ Nueva factura"), campana en `btn-icon` con punto rojo, avatar 34 px fondo `#DBEAFE` letra `--primary-dark`.
@@ -74,7 +74,7 @@ Estado → badge: Pagada = green · Pendiente = yellow · Parcial = blue · Anul
 
 ## 3. Componentes (clases CSS del prototipo, se conservan los nombres)
 
-`card`, `stat-card`, `kpi-icon-wrap` (44×44, radio 10), `btn-primary`, `btn-secondary`, `btn-danger`, `btn-icon` (32×32), `form-input` (+ `.error`), `form-label`, `form-error`, `select-input`, `search-input-wrap`, `table-base`, `badge` + `badge-{green,red,yellow,blue,gray,purple}`, `alert` + `alert-{success,error,warning,info}`, `modal-overlay`, `modal-box`, `tabs`, `tab-btn`, `page-header`, `page-title`, `page-subtitle`, `sidebar-item`.
+`card`, `card-padded`, `card-header`, `card-title`, `card-link`, `card-toolbar`, `toolbar-search` (+ `.narrow`, 360 px), `chips` + `chip` (+ `.active`: filtros Todos/Activo/Inactivo, padding 7×14, radio 7, 13 px), `empty-row`, `table-footer`, `kpi-grid` (+ `.three`), `kpi-label`, `kpi-value`, `kpi-delta`, `kpi-{blue,green,violet,yellow}`, `grid-main-side` (1fr + 320 px), `grid-2`, `stack`, `chart-empty`, `modal-header`, `modal-title`, `modal-body`, `modal-actions`, `form-grid` (+ `span-2`), `items-empty`, `summary-row`, `summary-total`, `total-amount`, `filter-card`, `page-alert`, `stat-card`, `kpi-icon-wrap` (44×44, radio 10), `btn-primary`, `btn-secondary`, `btn-danger`, `btn-icon` (32×32), `form-input` (+ `.error`), `form-label`, `form-error`, `select-input`, `search-input-wrap`, `table-base`, `badge` + `badge-{green,red,yellow,blue,gray,purple}`, `alert` + `alert-{success,error,warning,info}`, `modal-overlay`, `modal-box`, `tabs`, `tab-btn`, `page-header`, `page-title`, `page-subtitle`, `sidebar-item`.
 
 Los valores exactos de cada clase están en `src/index.css` del prototipo y se copian tal cual a `frontend/css/sigem.css`.
 
@@ -93,4 +93,8 @@ Los valores exactos de cada clase están en `src/index.css` del prototipo y se c
 | Sin aviso legal | "Documento interno — no es factura electrónica DIAN" en facturas y PDF; en el login, bajo la tarjeta, "SIGEM genera documentos de venta internos. No es facturación electrónica DIAN." (12 px, `--text-subtle`) | AGENTS.md §3.10 |
 | Estado de factura "Vencida" | Pendiente / Parcial / Pagada / Anulada | Reglas de pago de AGENTS.md §3 |
 | Sin módulo de proveedores | Ítem "Proveedores" (icono `truck` de Feather) con la pantalla de lista estándar | Requisito de SIGEM (PLAN.md, SIGEM-008) |
+| Formularios con los campos del prototipo | Campos de las tablas reales de SIGEM-018 (tipo y número de documento, precio de compra y venta, IVA 0/5/19 %, comisión…) | El formulario debe poder guardarse en la BD |
+| Dona "Ventas por categoría" | "Ventas por proveedor" | Los productos no tienen categoría en el modelo de datos |
+| Gráficas con Recharts | Espacio punteado "La gráfica aparece cuando haya facturas" hasta SIGEM-011 | Sin datos todavía; la librería se decide en SIGEM-011 |
+| Nuevo usuario "envía un correo" | Contraseña temporal que entrega el administrador | Sin servicio de correo ($0) |
 | Ancho fijo de escritorio | Mismo diseño; mínimo soportado 1280 px | App interna de escritorio |
