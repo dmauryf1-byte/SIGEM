@@ -16,7 +16,7 @@ El humano decidió que SIGEM se construye con **HTML, CSS y JavaScript** en la w
 | Iconos | lucide-react | Los SVG de línea del prototipo (estilo Feather/Lucide), inline |
 | Formularios | React Hook Form + Zod | `<form>` nativo + validación HTML5 en el cliente; **la validación real es la del backend** (Pydantic) |
 | Routing | React Router | Una página HTML por pantalla (`clientes.html`, `facturas.html`…) |
-| Servidor web | Vite dev server | FastAPI sirve `frontend/` como archivos estáticos (mismo origen: sin CORS) |
+| Servidor web | Vite dev server | FastAPI sirve `frontend/` como archivos estáticos (mismo origen: sin CORS). **Reemplazado por [ADR-0004](0004-flask-sirve-el-frontend.md):** lo sirve Flask |
 | Tooling | ESLint, Prettier, `tsc` | ESLint + Prettier (vía `npm`, solo como herramientas de desarrollo) |
 | Tests | Vitest + Testing Library + Playwright | Vitest (lógica JS) + Playwright (E2E) |
 | Backend / BD | FastAPI + SQLAlchemy + MySQL 8.4 | **Sin cambios** |

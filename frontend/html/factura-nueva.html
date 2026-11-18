@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Datos de la página: idioma, tamaño en el celular/PC y título de la pestaña -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nueva factura · SIGEM</title>
+    <!-- Estilos de SIGEM: colores, letras y componentes del diseño de Figma -->
+    <link rel="stylesheet" href="css/sigem.css" />
+    <!-- Código JavaScript de esta pantalla -->
+    <script type="module" src="js/factura-nueva.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <!-- Menú lateral: lo dibuja js/shared/layout.js con el usuario de la sesión -->
+      <div id="sidebar"></div>
+      <div class="app-main">
+        <!-- Barra superior: título de la pantalla y sus botones (también la dibuja layout.js) -->
+        <div id="topbar"></div>
+        <main class="app-content">
+          <!-- Aviso de la página: aparece al guardar o al usar algo que aún no está conectado -->
+          <div class="alert page-alert" id="page-alert" role="status" hidden></div>
+          <!-- Aviso legal obligatorio (AGENTS.md §3.10) -->
+          <div class="alert alert-warning page-alert" role="note">
+            Documento interno, no es factura electrónica DIAN.
+          </div>
+          <form id="form-factura" novalidate>
+            <div class="grid-main-side">
+              <!-- Columna izquierda: datos de la factura y productos -->
+              <div class="stack">
+                <!-- Datos generales: número, fecha, cliente y vendedor -->
+                <section class="card card-padded">
+                  <h2 class="card-title">Datos de la factura</h2>
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label class="form-label" for="numero_factura">Número</label>
+                      <input
+                        class="form-input"
+                        id="numero_factura"
+                        value="Lo asigna el sistema"
+                        disabled
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="fecha_factura"
+                        >Fecha<span class="form-required" aria-hidden="true">*</span></label
+                      >
+                      <input
+                        class="form-input"
+                        id="fecha_factura"
+                        name="fecha_factura"
+                        type="date"
+                        required
+                        data-error="La fecha es obligatoria"
+                        aria-describedby="fecha_factura-error"
+                      />
+                      <div class="form-error" id="fecha_factura-error" hidden></div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="id_cliente"
+                        >Cliente<span class="form-required" aria-hidden="true">*</span></label
+                      >
+                      <select
+                        class="form-input select-input"
+                        id="id_cliente"
+                        name="id_cliente"
+                        required
+                        data-error="Selecciona un cliente"
+                        aria-describedby="id_cliente-error"
+                      >
+                        <option value="">Primero registra un cliente</option>
+                      </select>
+                      <div class="form-error" id="id_cliente-error" hidden></div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="id_vendedor"
+                        >Vendedor<span class="form-required" aria-hidden="true">*</span></label
+                      >
+                      <select
+                        class="form-input select-input"
+                        id="id_vendedor"
+                        name="id_vendedor"
+                        required
+                        data-error="Selecciona un vendedor"
+                        aria-describedby="id_vendedor-error"
+                      >
+                        <option value="">Primero registra un vendedor</option>
+                      </select>
+                      <div class="form-error" id="id_vendedor-error" hidden></div>
+                    </div>
+                  </div>
+                </section>
+                <!-- Productos de la factura: cada línea guarda precio e IVA del momento -->
+                <section class="card card-padded">
+                  <div class="card-header-plain">
+                    <h2 class="card-title">Productos</h2>
+                    <button class="btn-secondary" id="btn-agregar-producto" type="button">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" /></svg
+                      >Agregar producto
+                    </button>
+                  </div>
+                  <div class="items-empty">
+                    No hay productos agregados
+                    <small>Haz clic en "Agregar producto" para empezar</small>
+                  </div>
+                </section>
+              </div>
+              <!-- Columna derecha: resumen con los totales y los botones -->
+              <aside class="card card-padded">
+                <h2 class="card-title">Resumen</h2>
+                <div class="summary-row"><span>Subtotal</span><span>$0</span></div>
+                <div class="summary-row"><span>IVA</span><span>$0</span></div>
+                <div class="summary-total">
+                  <span>Total</span><span class="total-amount">$0</span>
+                </div>
+                <p class="summary-note">
+                  Los totales los calcula el servidor con el IVA de cada producto.
+                </p>
+                <div class="summary-actions">
+                  <button class="btn-primary btn-block big" type="submit">Guardar factura</button>
+                  <a class="btn-secondary btn-block" href="facturas.html">Cancelar</a>
+                </div>
+              </aside>
+            </div>
+          </form>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

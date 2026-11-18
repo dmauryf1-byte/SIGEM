@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Datos de la página: idioma, tamaño en el celular/PC y título de la pestaña -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Facturas · SIGEM</title>
+    <!-- Estilos de SIGEM: colores, letras y componentes del diseño de Figma -->
+    <link rel="stylesheet" href="css/sigem.css" />
+    <!-- Código JavaScript de esta pantalla -->
+    <script type="module" src="js/facturas.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <!-- Menú lateral: lo dibuja js/shared/layout.js con el usuario de la sesión -->
+      <div id="sidebar"></div>
+      <div class="app-main">
+        <!-- Barra superior: título de la pantalla y sus botones (también la dibuja layout.js) -->
+        <div id="topbar"></div>
+        <main class="app-content">
+          <!-- Aviso de la página: aparece al guardar o al usar algo que aún no está conectado -->
+          <div class="alert page-alert" id="page-alert" role="status" hidden></div>
+          <!-- Aviso legal obligatorio (AGENTS.md §3.10) -->
+          <div class="alert alert-warning page-alert" role="note">
+            Documento interno, no es factura electrónica DIAN.
+          </div>
+          <!-- Tarjeta con buscador, filtro por estado, fechas y la tabla de facturas -->
+          <section class="card">
+            <!-- Buscador y filtros de la lista -->
+            <div class="card-toolbar">
+              <div class="search-input-wrap toolbar-search">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input
+                  class="form-input"
+                  type="search"
+                  placeholder="Buscar por número, cliente o vendedor..."
+                  aria-label="Buscar facturas"
+                />
+              </div>
+              <!-- Botones de filtro: el azul es el que está aplicado -->
+              <div class="chips" role="group" aria-label="Filtrar">
+                <button class="chip active" type="button" aria-pressed="true">Todos</button
+                ><button class="chip" type="button" aria-pressed="false">Pendiente</button
+                ><button class="chip" type="button" aria-pressed="false">Parcial</button
+                ><button class="chip" type="button" aria-pressed="false">Pagada</button
+                ><button class="chip" type="button" aria-pressed="false">Anulada</button>
+              </div>
+              <!-- Rango de fechas: desde / hasta -->
+              <input class="form-input input-date" type="date" aria-label="Desde" title="Desde" />
+              <input class="form-input input-date" type="date" aria-label="Hasta" title="Hasta" />
+            </div>
+            <!-- Tabla del listado: las filas llegan del backend cuando el módulo tenga API -->
+            <table class="table-base" aria-label="Facturas">
+              <thead>
+                <tr>
+                  <th scope="col">No. factura</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Vendedor</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Saldo</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="empty-row">
+                  <td colspan="8">Aún no hay facturas registradas</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

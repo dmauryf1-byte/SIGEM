@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Datos de la página: idioma, tamaño en el celular/PC y título de la pestaña -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Usuarios · SIGEM</title>
+    <!-- Estilos de SIGEM: colores, letras y componentes del diseño de Figma -->
+    <link rel="stylesheet" href="css/sigem.css" />
+    <!-- Código JavaScript de esta pantalla -->
+    <script type="module" src="js/usuarios.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <!-- Menú lateral: lo dibuja js/shared/layout.js con el usuario de la sesión -->
+      <div id="sidebar"></div>
+      <div class="app-main">
+        <!-- Barra superior: título de la pantalla y sus botones (también la dibuja layout.js) -->
+        <div id="topbar"></div>
+        <main class="app-content">
+          <!-- Aviso de la página: aparece al guardar o al usar algo que aún no está conectado -->
+          <div class="alert page-alert" id="page-alert" role="status" hidden></div>
+          <!-- Tarjeta con el buscador y la tabla de usuarios (solo Administrador) -->
+          <section class="card">
+            <!-- Buscador y filtros de la lista -->
+            <div class="card-toolbar">
+              <div class="search-input-wrap toolbar-search narrow">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input
+                  class="form-input"
+                  type="search"
+                  placeholder="Buscar usuario..."
+                  aria-label="Buscar usuarios"
+                />
+              </div>
+            </div>
+            <!-- Tabla del listado: las filas llegan del backend cuando el módulo tenga API -->
+            <table class="table-base" aria-label="Usuarios">
+              <thead>
+                <tr>
+                  <th scope="col">Usuario</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Rol</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="empty-row">
+                  <td colspan="5">Los usuarios se crean por consola hasta SIGEM-017</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </main>
+      </div>
+    </div>
+    <!-- Modal de nuevo usuario. Sin correo: el administrador entrega la contraseña temporal (DESIGN.md §4) -->
+    <div class="modal-overlay" id="modal-usuario" hidden>
+      <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-usuario-title">
+        <!-- Encabezado del modal con el botón X para cerrar -->
+        <div class="modal-header">
+          <h2 class="modal-title" id="modal-usuario-title">Nuevo usuario</h2>
+          <button class="btn-icon" type="button" data-close aria-label="Cerrar">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <!-- Formulario: los campos con * son obligatorios -->
+        <form class="modal-body" id="form-usuario" novalidate>
+          <div class="form-grid">
+            <div class="form-group span-2">
+              <label class="form-label" for="full_name"
+                >Nombre completo<span class="form-required" aria-hidden="true">*</span></label
+              >
+              <input
+                class="form-input"
+                id="full_name"
+                name="full_name"
+                type="text"
+                placeholder="María Pérez"
+                required
+                data-error="El nombre es obligatorio"
+                aria-describedby="full_name-error"
+              />
+              <div class="form-error" id="full_name-error" hidden></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="username"
+                >Nombre de usuario<span class="form-required" aria-hidden="true">*</span></label
+              >
+              <input
+                class="form-input"
+                id="username"
+                name="username"
+                type="text"
+                placeholder="maria.perez"
+                required
+                data-error="El usuario es obligatorio"
+                aria-describedby="username-error"
+              />
+              <div class="form-error" id="username-error" hidden></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="role"
+                >Rol<span class="form-required" aria-hidden="true">*</span></label
+              >
+              <select
+                class="form-input select-input"
+                id="role"
+                name="role"
+                required
+                data-error="Elige un rol"
+                aria-describedby="role-error"
+              >
+                <option>Vendedor</option>
+                <option>Administrador</option>
+              </select>
+              <div class="form-error" id="role-error" hidden></div>
+            </div>
+            <div class="form-group span-2">
+              <label class="form-label" for="password"
+                >Contraseña temporal<span class="form-required" aria-hidden="true">*</span></label
+              >
+              <input
+                class="form-input"
+                id="password"
+                name="password"
+                type="password"
+                required
+                data-error="La contraseña es obligatoria"
+                autocomplete="new-password"
+                aria-describedby="password-error"
+              />
+              <div class="form-error" id="password-error" hidden></div>
+            </div>
+          </div>
+          <!-- Botones: Cancelar cierra el modal, Guardar valida y envía -->
+          <div class="modal-actions">
+            <button class="btn-secondary" type="button" data-close>Cancelar</button>
+            <button class="btn-primary" type="submit">Guardar usuario</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Datos de la página: idioma, tamaño en el celular/PC y título de la pestaña -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Inicio · SIGEM</title>
+    <!-- Estilos de SIGEM: colores, letras y componentes del diseño de Figma -->
+    <link rel="stylesheet" href="css/sigem.css" />
+    <!-- Código JavaScript de esta pantalla -->
+    <script type="module" src="js/dashboard.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <!-- Menú lateral: lo dibuja js/shared/layout.js con el usuario de la sesión -->
+      <div id="sidebar"></div>
+      <div class="app-main">
+        <!-- Barra superior: título de la pantalla y sus botones (también la dibuja layout.js) -->
+        <div id="topbar"></div>
+        <main class="app-content">
+          <!-- Aviso de la página: aparece al guardar o al usar algo que aún no está conectado -->
+          <div class="alert page-alert" id="page-alert" role="status" hidden></div>
+          <!-- Fila 1: cuatro cifras principales (KPI) -->
+          <div class="kpi-grid">
+            <div class="stat-card">
+              <div class="kpi-head">
+                <div>
+                  <div class="kpi-label">Ventas del día</div>
+                  <div class="kpi-value">$0</div>
+                  <div class="kpi-delta">Hoy</div>
+                </div>
+                <div class="kpi-icon-wrap kpi-blue">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                    <polyline points="17 6 23 6 23 12" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="kpi-head">
+                <div>
+                  <div class="kpi-label">Total facturas</div>
+                  <div class="kpi-value">0</div>
+                  <div class="kpi-delta">0 pendientes</div>
+                </div>
+                <div class="kpi-icon-wrap kpi-green">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                    <polyline points="10 9 9 9 8 9" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="kpi-head">
+                <div>
+                  <div class="kpi-label">Pagos recibidos</div>
+                  <div class="kpi-value">$0</div>
+                  <div class="kpi-delta">Este mes</div>
+                </div>
+                <div class="kpi-icon-wrap kpi-violet">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <line x1="12" y1="1" x2="12" y2="23" />
+                    <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="kpi-head">
+                <div>
+                  <div class="kpi-label">Stock bajo</div>
+                  <div class="kpi-value">0</div>
+                  <div class="kpi-delta">productos críticos</div>
+                </div>
+                <div class="kpi-icon-wrap kpi-yellow">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <line x1="16.5" y1="9.4" x2="7.5" y2="4.21" />
+                    <path
+                      d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"
+                    />
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                    <line x1="12" y1="22.08" x2="12" y2="12" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Fila 2: gráficas de ventas del mes y ventas por categoría -->
+          <div class="grid-main-side">
+            <section class="card card-padded">
+              <h2 class="card-title">Ventas del mes</h2>
+              <div class="chart-empty">La gráfica aparece cuando haya facturas</div>
+            </section>
+            <section class="card card-padded">
+              <h2 class="card-title">Ventas por proveedor</h2>
+              <div class="chart-empty">La gráfica aparece cuando haya facturas</div>
+            </section>
+          </div>
+          <!-- Fila 3: últimas facturas y productos que se están agotando -->
+          <div class="grid-2">
+            <section class="card">
+              <div class="card-header">
+                <h2 class="card-title">Facturas recientes</h2>
+                <a class="card-link" href="facturas.html">Ver todas</a>
+              </div>
+              <table class="table-base">
+                <thead>
+                  <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="empty-row">
+                    <td colspan="4">Aún no hay facturas</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+            <section class="card">
+              <div class="card-header">
+                <h2 class="card-title">Productos con stock bajo</h2>
+                <a class="card-link" href="productos.html">Ver todos</a>
+              </div>
+              <table class="table-base">
+                <thead>
+                  <tr>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Stock</th>
+                    <th scope="col">Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="empty-row">
+                    <td colspan="3">Sin alertas de stock</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

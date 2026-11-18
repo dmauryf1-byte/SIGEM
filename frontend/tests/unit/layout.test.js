@@ -41,15 +41,12 @@ describe('renderSidebar', () => {
     expect(container.querySelectorAll('.sidebar-item.active')).toHaveLength(1);
   });
 
-  it('deshabilita los ítems sin pantalla: sin href y con aria-disabled', () => {
+  it('cada ítem enlaza a su pantalla', () => {
     renderSidebar(container, { current: 'dashboard', user: ADMIN });
-    const clientes = [...container.querySelectorAll('nav .sidebar-item')].find(
-      (a) => a.textContent === 'Clientes',
+    const hrefs = [...container.querySelectorAll('nav .sidebar-item')].map((a) =>
+      a.getAttribute('href'),
     );
-    expect(clientes.getAttribute('aria-disabled')).toBe('true');
-    expect(clientes.hasAttribute('href')).toBe(false);
-    const inicio = container.querySelector('[aria-current="page"]');
-    expect(inicio.getAttribute('href')).toBe('dashboard.html');
+    expect(hrefs).toEqual(NAV_ITEMS.map((item) => `${item.key}.html`));
   });
 
   it('pinta el nombre del usuario como texto, sin crear elementos', () => {
@@ -91,5 +88,24 @@ describe('renderTopBar', () => {
   it('omite el subtítulo si no se pasa', () => {
     renderTopBar(container, { title: 'Dashboard', user: ADMIN });
     expect(container.querySelector('.topbar-subtitle')).toBeNull();
+  });
+
+  it('pinta los botones de la pantalla antes de la campana', () => {
+    renderTopBar(container, {
+      title: 'Clientes',
+      user: ADMIN,
+      actions: [
+        { label: 'Nuevo cliente', icon: 'plus', modal: 'modal-cliente' },
+        { id: 'btn-pdf', label: 'PDF', variant: 'secondary' },
+      ],
+    });
+    const [nuevo, pdf, bell] = container.querySelectorAll('.topbar-actions button');
+    expect(nuevo.className).toBe('btn-primary');
+    expect(nuevo.textContent).toBe('Nuevo cliente');
+    expect(nuevo.dataset.open).toBe('modal-cliente');
+    expect(nuevo.querySelector('svg')).not.toBeNull();
+    expect(pdf.className).toBe('btn-secondary');
+    expect(pdf.id).toBe('btn-pdf');
+    expect(bell.getAttribute('aria-label')).toBe('Notificaciones');
   });
 });

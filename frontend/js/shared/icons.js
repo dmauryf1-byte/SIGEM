@@ -1,6 +1,9 @@
-// SVG de línea del prototipo de Figma (Feather). Se crean con createElementNS: nada de innerHTML.
+// Íconos de línea del prototipo de Figma (familia Feather).
+// Se dibujan con createElementNS (nunca con innerHTML) para cumplir AGENTS.md §5.7.
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
+// ─── Lista de íconos ────────────────────────────────────────────────────────
+// Cada ícono es una lista de figuras SVG: [etiqueta, atributos]
 const SHAPES = {
   home: [
     ['path', { d: 'M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z' }],
@@ -60,8 +63,20 @@ const SHAPES = {
     ['path', { d: 'M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9' }],
     ['path', { d: 'M13.73 21a2 2 0 01-3.46 0' }],
   ],
+  // Botones de la barra superior ("+ Nuevo…", "Descargar PDF")
+  plus: [
+    ['line', { x1: 12, y1: 5, x2: 12, y2: 19 }],
+    ['line', { x1: 5, y1: 12, x2: 19, y2: 12 }],
+  ],
+  download: [
+    ['path', { d: 'M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4' }],
+    ['polyline', { points: '7 10 12 15 17 10' }],
+    ['line', { x1: 12, y1: 15, x2: 12, y2: 3 }],
+  ],
 };
 
+// ─── Crear un ícono ─────────────────────────────────────────────────────────
+// Ejemplo: icon('home') devuelve un <svg> de 18 px listo para meter en un botón
 export function icon(name, size = 18) {
   const svg = document.createElementNS(SVG_NS, 'svg');
   const attrs = {
